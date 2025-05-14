@@ -1,4 +1,6 @@
 
+
+
 select
     a, b, COUNT(*)
 from (
