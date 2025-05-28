@@ -1,4 +1,6 @@
+-- 12
 
+<<<<<<< HEAD
 -- explain plan for 
 
 
@@ -20,6 +22,25 @@ FROM
 where
   AA.IN_DATE >= TO_DATE('2023-01-01', 'YYYY-MM-DD') and AA.IN_DATE < TO_DATE('2025-05-19', 'YYYY-MM-DD') + INTERVAL '1' DAY
 ;
+=======
+SELECT *
+FROM
+  CMES.SPRC03009
+WHERE
+  TRUNC(IN_DATE) BETWEEN TO_DATE('2025-05-15', 'YYYY-MM-DD') AND TO_DATE('2025-05-15', 'YYYY-MM-DD')
+ ORDER BY LOT_NO
+  ;
+
+SELECT
+  B.LOT_NO, B.EQUIP_CODE, C.CODE_NAME, B.IN_DATE
+  -- COUNT(*)
+FROM 
+  CMES.SPRC02002 A JOIN CMES.SPRC03009 B ON B.LOT_NO = A.LOT_NO
+  LEFT JOIN BESTERP.CM_CODEDETAIL C ON C.CODE_TYPE = 'PA45' AND C.CODE = B.EQUIP_CODE
+WHERE
+  TRUNC(B.IN_DATE) BETWEEN TO_DATE('2025-05-15', 'YYYY-MM-DD') AND TO_DATE('2025-05-15', 'YYYY-MM-DD')
+  ;
+>>>>>>> 9c1e17f2ffa1a05c863ef1c90c998040dcf99c09
 
 SELECT *
 from  besterp.CM_CODEDETAIL
@@ -112,16 +133,22 @@ where
 ;
 
 select 
- LOT_NO                                         "heat_no", 
- EQUIP_CODE                                     "equip_code", 
- PRODUCTION_ED                                  "production_ed", 
- PRODUCTION_WIDTH                               "production_width", 
- TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS')      "in_date",
- TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') "create_dtm"
+
+--  LOT_NO                                         "heat_no", 
+--  EQUIP_CODE                                     "equip_code", 
+--  PRODUCTION_ED                                  "production_ed", 
+--  PRODUCTION_WIDTH                               "production_width", 
+--  TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS')      "in_date",
+--  TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') "create_dtm"
+COUNT(*)
 from 
   cmes.sprc03033
 where
+<<<<<<< HEAD
   IN_DATE >= TO_DATE('2025-05-19', 'YYYY-MM-DD') and IN_DATE < TO_DATE('2025-05-19', 'YYYY-MM-DD') + INTERVAL '1' DAY
+=======
+  TRUNC(IN_DATE) BETWEEN TO_DATE('2024-01-01', 'YYYY-MM-DD') and  TO_DATE('2025-05-13', 'YYYY-MM-DD')
+>>>>>>> 9c1e17f2ffa1a05c863ef1c90c998040dcf99c09
 order by in_date
 ;
 
