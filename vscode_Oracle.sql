@@ -1,186 +1,109 @@
--- 12
-
-<<<<<<< HEAD
--- explain plan for 
-
-
-SELECT 
-  -- count(*)
-  LOT_NO AS "lot_no",
-  EQUIP_CODE AS "equip_code",
-  ED_MIN AS "ed_min",
-  ED_MAX AS "ed_max",
-  LENGTH_MIN AS "length_min",
-  LENGTH_MAX as "length_max",
-  DIA_VAR as "dia_var",
-  TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "in_date",
-  TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "create_dtm"
-FROM
-(
-  SELECT * from CMES.sprc04001 WHERE WORK_DATE >= TO_DATE('2023-01-01', 'YYYY-MM-DD') - INTERVAL '5' DAY and WORK_DATE < TO_DATE('2023-12-31', 'YYYY-MM-DD') + INTERVAL '1' DAY
-) AA
-where
-  AA.IN_DATE >= TO_DATE('2023-01-01', 'YYYY-MM-DD') and AA.IN_DATE < TO_DATE('2025-05-19', 'YYYY-MM-DD') + INTERVAL '1' DAY
-;
-=======
-SELECT *
-FROM
-  CMES.SPRC03009
-WHERE
-  TRUNC(IN_DATE) BETWEEN TO_DATE('2025-05-15', 'YYYY-MM-DD') AND TO_DATE('2025-05-15', 'YYYY-MM-DD')
- ORDER BY LOT_NO
-  ;
-
-SELECT
-  B.LOT_NO, B.EQUIP_CODE, C.CODE_NAME, B.IN_DATE
-  -- COUNT(*)
-FROM 
-  CMES.SPRC02002 A JOIN CMES.SPRC03009 B ON B.LOT_NO = A.LOT_NO
-  LEFT JOIN BESTERP.CM_CODEDETAIL C ON C.CODE_TYPE = 'PA45' AND C.CODE = B.EQUIP_CODE
-WHERE
-  TRUNC(B.IN_DATE) BETWEEN TO_DATE('2025-05-15', 'YYYY-MM-DD') AND TO_DATE('2025-05-15', 'YYYY-MM-DD')
-  ;
->>>>>>> 9c1e17f2ffa1a05c863ef1c90c998040dcf99c09
-
-SELECT *
-from  besterp.CM_CODEDETAIL
-where 
-  code_type = 'PA45';
-
-select 
-  -- count(EQUIP_CODE) cnt
-  EQUIP_CODE, 
-  LOT_NO, 
-  TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS') "in_date", 
-  TO_CHAR(WORK_DATE, 'YYYY-MM-DD HH24:MI:SS') "work_date"
-from 
-  cmes.SPRC03009
-where
-  TRUNC(IN_DATE) BETWEEN TO_DATE('2025-05-14', 'YYYY-MM-DD') and  TO_DATE('2025-05-16', 'YYYY-MM-DD')
-  -- TRUNC(WORK_DATE) BETWEEN TO_DATE('2025-05-15', 'YYYY-MM-DD') and  TO_DATE('2025-05-16', 'YYYY-MM-DD')
-order by lot_no
-;
-
-select TO_DATE('2024-05-19', 'YYYY-MM-DD') from dual;
-
-explain plan for 
-SELECT
-  LOT_NO, EQUIP_CODE
-FROM
-  CMES.SPRC03009
-WHERE
-  (
-    WORK_END_DATE >= TO_DATE('2025-05-01', 'YYYY-MM-DD') and WORK_END_DATE < TO_DATE('2025-05-19', 'YYYY-MM-DD') + INTERVAL '1' DAY
-  )
-  -- OR
-  -- (
-  --   WORK_END_DATE IS NULL
-  -- ) 
-;
-
-SELECT CODE FROM BESTERP.CM_CODEDETAIL WHERE CODE_TYPE='PA45';
-  -- TO_CHAR(B.WORK_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "work_date",  
-  -- TO_CHAR(B.WORK_END_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "work_end_date",
-  -- TO_CHAR(B.WORK_START_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "work_start_date"
-
--- explain plan for 
-SELECT   
-  B.LOT_NO as "lot_no", 
-  B.EQUIP_CODE as "equip_code",
-  C.CODE_NAME as "code_name", 
-  TO_CHAR(B.IN_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "in_date",
-  TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "create_dtm"
-FROM 
-  CMES.SPRC02002 A JOIN 
-  (
-    SELECT 
-      LOT_NO, EQUIP_CODE, IN_DATE
-    FROM 
-      CMES.SPRC03009
-    WHERE
-      WORK_START_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD') - INTERVAL '5' DAY and WORK_START_DATE < TO_DATE('2025-05-20', 'YYYY-MM-DD') + INTERVAL '1' DAY
-  ) B
-   ON B.LOT_NO = A.LOT_NO
-  LEFT JOIN BESTERP.CM_CODEDETAIL C ON C.CODE_TYPE = 'PA45' AND C.CODE = B.EQUIP_CODE
-WHERE
-  B.IN_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD') and B.IN_DATE < TO_DATE('2025-05-20', 'YYYY-MM-DD') + INTERVAL '1' DAY
-;
-
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
-select
-    a, b, COUNT(*)
-from (
-select 
---   FACTORY_CODE, LOT_NO, EQUIP_CODE, PRODUCTION_ED, PRODUCTION_WIDTH, IN_DATE, WORK_DATE
--- FACTORY_CODE, count(FACTORY_CODE) cnt
- to_char(IN_DATE,'YYYY-MM-DD') a, to_char(WORK_DATE,'YYYY-MM-DD') b
-from 
-  cmes.sprc03033
-where
-  TRUNC(WORK_DATE) BETWEEN TO_DATE('2025-05-10', 'YYYY-MM-DD') and  TO_DATE('2025-05-14', 'YYYY-MM-DD')
-) aa
-group by aa.a,aa.b
-order by aa.a, aa.b
-;
+select * from ALL_TAB_COLUMNS where table_name='SPRD03015';
+-- 오라클 컬럼 이름 과 속성 얻기 ( postgresql )
 SELECT
-    IN_DATE, WORK_DATE
-from 
-  cmes.sprc03033
-where
-  TRUNC(IN_DATE) BETWEEN TO_DATE('2025-01-01', 'YYYY-MM-DD') and  TO_DATE('2025-05-14', 'YYYY-MM-DD')
-  and WORK_DATE is NULL
+  lower(c.COLUMN_NAME), 
+  cc.COMMENTS, 
+  case 
+    when c.DATA_TYPE = 'VARCHAR2' then 'varchar'
+    when c.DATA_TYPE = 'NUMBER' then 'numeric'
+    when c.DATA_TYPE = 'DATE' then 'timestamptz'
+    else c.DATA_TYPE
+  end as dt, 
+  case 
+    when c.DATA_TYPE = 'VARCHAR2' then to_char(c.DATA_LENGTH)
+    when c.DATA_TYPE = 'NUMBER' then to_char(c.DATA_LENGTH) || ' , ' || case when to_char(c.DATA_SCALE) is null then '0' else to_char(c.DATA_SCALE) end
+    when c.DATA_TYPE = 'DATE' then ''
+    else c.DATA_TYPE
+  end as data_len,
+  c.DATA_LENGTH, c.DATA_SCALE, c.DATA_PRECISION
+
+-- 오라클 컬럼 이름 과 속성 얻기 ( bigquery )
+-- SELECT
+--   lower(c.COLUMN_NAME), 
+--   cc.COMMENTS, 
+--   case 
+--     when c.DATA_TYPE = 'VARCHAR2' then 'string'
+--     when c.DATA_TYPE = 'NUMBER' then 'numeric'
+--     when c.DATA_TYPE = 'DATE' then 'datetime'
+--     else c.DATA_TYPE
+--   end as dt, 
+--   case 
+--     when c.DATA_TYPE = 'VARCHAR2' then '("' || to_char(c.DATA_LENGTH) || '")'
+--     when c.DATA_TYPE = 'NUMBER' then '(' || to_char(c.DATA_LENGTH) || ' , ' || case when to_char(c.DATA_SCALE) is null then '0' else to_char(c.DATA_SCALE) end || ')'
+--     when c.DATA_TYPE = 'DATE' then ''
+--     else c.DATA_TYPE
+--   end as data_len  
+
+FROM
+  ALL_TAB_COLUMNS c
+  left join 
+  ALL_COL_COMMENTS cc on c.TABLE_NAME = cc.TABLE_NAME and c.COLUMN_NAME = cc.COLUMN_NAME
+WHERE
+  c.TABLE_NAME='SPRD03015'
+  AND c.COLUMN_NAME in (
+    'LOT_NO', 'PROCESS_CODE', 'PROCESS_RANK', 'EQUIP_CODE', 'MATERIAL_LENGTH', 'SQUARENESS'
+    )
 ;
 
-select 
-
---  LOT_NO                                         "heat_no", 
---  EQUIP_CODE                                     "equip_code", 
---  PRODUCTION_ED                                  "production_ed", 
---  PRODUCTION_WIDTH                               "production_width", 
---  TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS')      "in_date",
---  TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') "create_dtm"
-COUNT(*)
-from 
-  cmes.sprc03033
-where
-<<<<<<< HEAD
-  IN_DATE >= TO_DATE('2025-05-19', 'YYYY-MM-DD') and IN_DATE < TO_DATE('2025-05-19', 'YYYY-MM-DD') + INTERVAL '1' DAY
-=======
-  TRUNC(IN_DATE) BETWEEN TO_DATE('2024-01-01', 'YYYY-MM-DD') and  TO_DATE('2025-05-13', 'YYYY-MM-DD')
->>>>>>> 9c1e17f2ffa1a05c863ef1c90c998040dcf99c09
-order by in_date
-;
-
-SELECT 
-    HEAT_NO AS "heat_no", 
-	STIR_END_VACUUM_DEGR AS "stir_end_vacuum_degr", 
-  SOLID_WRK_TIMES as "solid_wrk_times",
-	TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "in_date",
-    TO_CHAR(UP_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "up_date",
-    TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "create_dtm"
-FROM 
-    CMES.sprb3810
+SELECT
+  C.AFTER_PROCESS_CODE as "after_process_code",
+  B.PROCESS_RANK as "process_rank",
+  B.LOT_NO as "lot_no",
+  B.PROCESS_CODE as "process_code",
+  B.EQUIP_CODE as "equip_code",
+  B.CUT_SCRAP as "cut_scrap",
+  B.INPUT_ED as "input_ed",
+  B.INPUT_WGT as "input_wgt",
+  B.PRODUCTION_ED as "production_ed",
+  B.PRODUCTION_QTY as "production_qty",
+  B.PRODUCTION_WGT as "production_wgt",  
+  TO_CHAR(B.WORK_START_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "work_start_date",
+  TO_CHAR(B.WORK_END_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "work_end_date",
+  TO_CHAR(B.IN_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "in_date",
+  TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "create_dtm"
+FROM
+  CMES.SPRC02002 A JOIN 
+  (
+    SELECT
+      *
+    FROM
+      CMES.SPRC03009
+    WHERE
+      WORK_START_DATE >= TO_DATE('2025-06-10', 'YYYY-MM-DD') - INTERVAL '5' DAY and WORK_START_DATE < TO_DATE('2025-06-11', 'YYYY-MM-DD') + INTERVAL '1' DAY
+      AND PROCESS_CODE = 'AB03'
+  ) B ON B.LOT_NO = A.LOT_NO
+  LEFT JOIN CMES.SPRC02003 C ON C.LOT_NO = B.LOT_NO AND C.PROCESS_RANK = B.PROCESS_RANK
 WHERE 
-    IN_DATE IS NOT NULL 
-    AND TRUNC(IN_DATE) >= TO_DATE('2025-04-01', 'YYYY-MM-DD')
-ORDER by HEAT_NO
+  B.IN_DATE >= TO_DATE('2025-06-11', 'YYYY-MM-DD') and B.IN_DATE < TO_DATE('2025-06-11', 'YYYY-MM-DD') + INTERVAL '1' DAY
+order by B.IN_DATE
+;  
+
+;  
+
 ;
+-- explain plan for 
+SELECT
+  a.LOT_NO as "lot_no",
+  a.PROCESS_CODE as "process_code",
+  a.PROCESS_RANK as "process_rank",
+  a.EQUIP_CODE as "equip_code",
+  a.MATERIAL_LENGTH as "material_length",
+  a.SQUARENESS as "squareness",
+  TO_CHAR(a.IN_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "in_date",
+  TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "create_dtm"
+FROM
+  (
+  SELECT
+    *
+  FROM 
+    CMES.SPRD03015
+  WHERE
+    WORK_DATE >= TO_DATE('2025-06-10', 'YYYY-MM-DD') - INTERVAL '5' DAY and WORK_DATE < TO_DATE('2025-06-10', 'YYYY-MM-DD') + INTERVAL '1' DAY
+  ) a
+WHERE
+  a.IN_DATE >= TO_DATE('2025-06-10', 'YYYY-MM-DD') and a.IN_DATE < TO_DATE('2025-06-10', 'YYYY-MM-DD') + INTERVAL '1' DAY
+;  
+-- group by heat_no
 
-select TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') from dual;
-
-select 
-count(*)
--- HEAT_NO                                      AS "heat_no"
---      , RTN_TYPE                                     AS "rtn_type"
---      , WRK_SEQ                                      AS "wrk_seq"
---      , TO_CHAR(TMPRT_TIME, 'YYYY-MM-DD HH24:MI:SS') AS "tmprt_time"
---      , TMPRT                                        AS "tmprt"
---      , TO_CHAR(IN_DATE, 'YYYY-MM-DD HH24:MI:SS')    AS "in_date"
---      , TO_CHAR(UP_DATE, 'YYYY-MM-DD HH24:MI:SS')    AS "up_date"
---      , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')    AS "create_dtm" 
-from cmes.SPRB3160
-where 
-    IN_DATE >= TO_DATE('20240101','YYYYMMDD')
-    and HEAT_NO is null
-order by IN_DATE;
