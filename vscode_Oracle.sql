@@ -1,49 +1,89 @@
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
 
+select IN_DATE, TO_CHAR(UP_DATE, 'YYYY-MM-DD HH24:MI:SS') AS "up_date" FROM BESTERP.CM_CODEDETAIL cc WHERE UP_DATE is not null ORDER BY UP_DATE DESC, IN_DATE DESC;
+
+SELECT
+  cc.CODE,
+  cc.CODE_TYPE,
+  count(*) as cnt
+FROM
+  BESTERP.CM_CODEDETAIL cc
+GROUP BY cc.CODE,cc.CODE_TYPE
+ORDER BY cnt desc
+  ;
+
+SELECT
+  to_char(a.UP_DATE,'YYYY-MM-DD') as up_date, count(a.UP_DATE) as cnt
+from
+(SELECT 
+  trunc(UP_DATE, 'DD') as UP_DATE
+FROM BESTERP.CM_CODEDETAIL cc
+WHERE
+  UP_DATE is not null
+) a
+group by a.UP_DATE
+order by up_date DESC
+;
+
+
+
 select * from ALL_TAB_COLUMNS where table_name='SPRD03015';
 -- 오라클 컬럼 이름 과 속성 얻기 ( postgresql )
-SELECT
-  lower(c.COLUMN_NAME), 
-  cc.COMMENTS, 
-  case 
-    when c.DATA_TYPE = 'VARCHAR2' then 'varchar'
-    when c.DATA_TYPE = 'NUMBER' then 'numeric'
-    when c.DATA_TYPE = 'DATE' then 'timestamptz'
-    else c.DATA_TYPE
-  end as dt, 
-  case 
-    when c.DATA_TYPE = 'VARCHAR2' then to_char(c.DATA_LENGTH)
-    when c.DATA_TYPE = 'NUMBER' then to_char(c.DATA_LENGTH) || ' , ' || case when to_char(c.DATA_SCALE) is null then '0' else to_char(c.DATA_SCALE) end
-    when c.DATA_TYPE = 'DATE' then ''
-    else c.DATA_TYPE
-  end as data_len,
-  c.DATA_LENGTH, c.DATA_SCALE, c.DATA_PRECISION
-
--- 오라클 컬럼 이름 과 속성 얻기 ( bigquery )
 -- SELECT
 --   lower(c.COLUMN_NAME), 
 --   cc.COMMENTS, 
 --   case 
---     when c.DATA_TYPE = 'VARCHAR2' then 'string'
+--     when c.DATA_TYPE = 'VARCHAR2' then 'varchar'
 --     when c.DATA_TYPE = 'NUMBER' then 'numeric'
---     when c.DATA_TYPE = 'DATE' then 'datetime'
+--     when c.DATA_TYPE = 'DATE' then 'timestamptz'
 --     else c.DATA_TYPE
 --   end as dt, 
 --   case 
---     when c.DATA_TYPE = 'VARCHAR2' then '("' || to_char(c.DATA_LENGTH) || '")'
---     when c.DATA_TYPE = 'NUMBER' then '(' || to_char(c.DATA_LENGTH) || ' , ' || case when to_char(c.DATA_SCALE) is null then '0' else to_char(c.DATA_SCALE) end || ')'
+--     when c.DATA_TYPE = 'VARCHAR2' then to_char(c.DATA_LENGTH)
+--     when c.DATA_TYPE = 'NUMBER' then to_char(c.DATA_LENGTH) || ' , ' || case when to_char(c.DATA_SCALE) is null then '0' else to_char(c.DATA_SCALE) end
 --     when c.DATA_TYPE = 'DATE' then ''
 --     else c.DATA_TYPE
---   end as data_len  
+--   end as data_len,
+--   c.DATA_LENGTH, c.DATA_SCALE, c.DATA_PRECISION
+
+-- 오라클 컬럼 이름 과 속성 얻기 ( bigquery )
+SELECT
+  lower(c.COLUMN_NAME), 
+  cc.COMMENTS, 
+  case 
+    when c.DATA_TYPE = 'VARCHAR2' then 'string'
+    when c.DATA_TYPE = 'NUMBER' then 'numeric'
+    when c.DATA_TYPE = 'DATE' then 'datetime'
+    else c.DATA_TYPE
+  end as dt, 
+  case 
+    when c.DATA_TYPE = 'VARCHAR2' then '("' || to_char(c.DATA_LENGTH) || '")'
+    when c.DATA_TYPE = 'NUMBER' then '(' || to_char(c.DATA_LENGTH) || ' , ' || case when to_char(c.DATA_SCALE) is null then '0' else to_char(c.DATA_SCALE) end || ')'
+    when c.DATA_TYPE = 'DATE' then ''
+    else c.DATA_TYPE
+  end as data_len  
 
 FROM
   ALL_TAB_COLUMNS c
   left join 
   ALL_COL_COMMENTS cc on c.TABLE_NAME = cc.TABLE_NAME and c.COLUMN_NAME = cc.COLUMN_NAME
 WHERE
-  c.TABLE_NAME='SPRD03015'
+  c.TABLE_NAME='CM_CODEDETAIL'
   AND c.COLUMN_NAME in (
-    'LOT_NO', 'PROCESS_CODE', 'PROCESS_RANK', 'EQUIP_CODE', 'MATERIAL_LENGTH', 'SQUARENESS'
+    'CODE',
+'CODE_NAME',
+'USE_YN',
+'CODE_TYPE',
+'MGT_CHAR1',
+'MGT_CHAR2',
+'MGT_CHAR3',
+'MGT_CHAR4',
+'MGT_CHAR5',
+'MGT_CHAR6',
+'MGT_CHAR7',
+'MGT_CHAR8',
+'MGT_CHAR9',
+'MGT_CHAR10'
     )
 ;
 
