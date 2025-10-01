@@ -9,7 +9,8 @@
       "Bash(/c/Users/하민규/AppData/Local/Microsoft/WindowsApps/python.exe analyze_2025.py)",
       "Bash(/c/Users/하민규/AppData/Local/Microsoft/WindowsApps/python analyze_2025.py)",
       "Bash(cmd.exe:*)",
-      "Bash(powershell.exe:*)"
+      "Bash(powershell.exe:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
