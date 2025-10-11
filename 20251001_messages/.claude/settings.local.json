@@ -4,7 +4,13 @@
       "Bash(python3:*)",
       "Bash(awk:*)",
       "Bash(sort:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(sudo apt-get:*)",
+      "Bash(sudo apt-get install:*)",
+      "Read(//tmp/**)",
+      "Bash(~/bin/pandoc:*)",
+      "Read(//mnt/c/git/myTest/20251001_messages/**)",
+      "Bash(rsync:*)"
     ],
     "deny": [],
     "ask": []
