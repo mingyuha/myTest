@@ -1,0 +1,12 @@
+content-length
+361
+content-type
+application/json;charset=UTF-8
+date
+Sun, 05 Oct 2025 05:09:17 GMT
+set-cookie
+SAVE_LOGIN_ID=""; path=/; secure; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT
+set-cookie
+appTarget=3026692; path=/; domain=ananti.kr; secure; Max-Age=7776000; Expires=Sat, 03-Jan-2026 05:09:17 GMT
+set-cookie
+njiegnoal=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMjExMDI3NTAwIiwiYXRub2FrbmV0bmkiOiI3NWVlNmRhZTJjYzkzM2FjZTU2NWNhZTliOGQ4Y2VlYTNiMmNmNzA1Mzg4YmE3YjMwOTQ2M2Y3MDVmZjVlM2RkZTU4OWU5NTVlOWJiNjg1Yzg3NWRmMjQ2MmJmNTFlOWJlZmU0NWNmMDQxYmY3ZDcyMDEzZGNiZDY2NWM3ZmQ1MCIsImNtTm8iOiIzMDI2NjkyIiwiZXhwIjoxNzY3NDE2OTU3LCJpYXQiOjE3NTk2NDA5NTd9.D1IareHwum_rugpiYPeOwEOzRsb7KEdN50uMGhkEIc7l97jK7Mf4aQgecY9nI7KXnCcTPCpz6PjZfsckS4w_Dw; path=/; domain=ananti.kr; secure; Max-Age=3600; Expires=Sun, 05-Oct-2025 06:09:17 GMT

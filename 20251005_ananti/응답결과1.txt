@@ -1,0 +1,51 @@
+{
+    "code": 200,
+    "message": null,
+    "data": [
+        {
+            "seq": null,
+            "chCourse": "1",
+            "chDate": "20251020",
+            "rateCd": "2",
+            "guestCnt": "0",
+            "totalCnt": "4",
+            "rsvnType": "ORIGIN",
+            "rsvnGubun": "GG",
+            "rate": "78880",
+            "originRate": "",
+            "rateDesc": "",
+            "chPart": "1",
+            "rtime": "06:42"
+        },
+        {
+            "seq": null,
+            "chCourse": "1",
+            "chDate": "20251020",
+            "rateCd": "2",
+            "guestCnt": "0",
+            "totalCnt": "4",
+            "rsvnType": "ORIGIN",
+            "rsvnGubun": "GG",
+            "rate": "78880",
+            "originRate": "",
+            "rateDesc": "",
+            "chPart": "1",
+            "rtime": "07:03"
+        },
+        {
+            "seq": null,
+            "chCourse": "1",
+            "chDate": "20251020",
+            "rateCd": "2",
+            "guestCnt": "0",
+            "totalCnt": "4",
+            "rsvnType": "ORIGIN",
+            "rsvnGubun": "GG",
+            "rate": "78880",
+            "originRate": "",
+            "rateDesc": "",
+            "chPart": "1",
+            "rtime": "07:10"
+        }
+    ]
+}

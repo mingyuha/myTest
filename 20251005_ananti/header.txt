@@ -1,0 +1,44 @@
+:authority
+ananti.kr
+:method
+POST
+:path
+/reservation/joongang/ajax/golf-course
+:scheme
+https
+accept
+application/json, text/javascript, */*; q=0.01
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+content-length
+79
+content-type
+application/json
+cookie
+_fwb=108axYfIpB4V0ZBI3UHpwDS.1745565703170; _ga=GA1.1.91133131.1745565703; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=ko; _gcl_au=1.1.1796100287.1759636750; _fbp=fb.1.1759636750045.453884261755904211; appTarget=3026692; _gcl_gs=2.1.k1$i1759636950$u214738887; _gcl_aw=GCL.1759636956.CjwKCAjwi4PHBhA-EiwAnjTHuZ6GU8o65ogIxRttFvVwPM-mjhpUqMd-VYZtyh8a89lrAjMgTz6srRoCi3EQAvD_BwE; appTargetDelete=Y; ME_SID=NDNmYTMyMDMtNTNkNS00MTVkLWE3MjktNDhhNjhlZDNiNGI4; njiegnoal=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyMjExMDI3NTAwIiwiYXRub2FrbmV0bmkiOiI3NWVlNmRhZTJjYzkzM2FjZTU2NWNhZTliOGQ4Y2VlYTNiMmNmNzA1Mzg4YmE3YjMwOTQ2M2Y3MDVmZjVlM2RkZTU4OWU5NTVlOWJiNjg1Yzg3NWRmMjQ2MmJmNTFlOWJlZmU0NWNmMDQxYmY3ZDcyMDEzZGNiZDY2NWM3ZmQ1MCIsImNtTm8iOiIzMDI2NjkyIiwiZXhwIjoxNzY3NDEzOTMxLCJpYXQiOjE3NTk2Mzc5MzF9.y6e0PEXYjbTl2AoDfv5al25G6RWcq1qbYHCuUijuYpAu-LJBZyGloI6PW3DestZ7ycIM3EMd5Bc47fLLpybUvw; JSESSIONID=ZTJmNTgyYTMtMTQyYi00Yjc1LTkzMWQtNWVhNDU2ODY3NDU5; wcs_bt=s_49d2cb2091ea:1759637965; _ga_J1CFQQ9G2C=GS2.1.s1759636749$o7$g1$t1759637966$j26$l0$h0; AWSALB=MvEo3Lolx3/iwZ/LiK2xTwr8IAxYZLzgS7w4QvtHKEE2/jBZK22isqzW81I5hCZ/vfgHzd0ZlsybLYlzTKda+wN+WAv13g71QbrA/riil79L6kd0zmUgdRw3es1e
+origin
+https://ananti.kr
+priority
+u=1, i
+referer
+https://ananti.kr/ko/reservation/joongang/golf?memNo=2211027500&arr=&dep=
+sec-ch-ua
+"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+x-csrf-token
+1be60b8c-f22a-4e48-8ffd-4f32b3435646
+x-requested-with
+XMLHttpRequest

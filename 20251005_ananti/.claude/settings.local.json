@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(chmod:*)",
+      "WebFetch(domain:cgv.co.kr)",
+      "WebSearch",
+      "Bash(mkdir:*)",
+      "Bash(curl -s \"https://cgv.co.kr\")",
+      "Bash(/home/lips/20251005_ananti/cgv_js_files/download.sh:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

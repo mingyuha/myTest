@@ -1,0 +1,1 @@
+{"memNo":"2211027500","date":"20251020","course":1,"golfType":"GG","bsns":"22"}

@@ -1,0 +1,42 @@
+:authority
+me.ananti.kr
+:method
+POST
+:path
+/user/signin_proc
+:scheme
+https
+accept
+application/json, text/javascript, */*; q=0.01
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+content-length
+49
+content-type
+application/x-www-form-urlencoded; charset=UTF-8
+cookie
+_fwb=108axYfIpB4V0ZBI3UHpwDS.1745565703170; _ga=GA1.1.91133131.1745565703; _gcl_au=1.1.1796100287.1759636750; _fbp=fb.1.1759636750045.453884261755904211; appTarget=3026692; _gcl_gs=2.1.k1$i1759640804$u214738887; _gcl_aw=GCL.1759640807.CjwKCAjwi4PHBhA-EiwAnjTHuThVUKDwOm0qhwwIarj_79USmd_4vtbGNgQreu2jOevGLE3v2N0CjRoCJo8QAvD_BwE; JSESSIONID=YmI3MDBjN2QtMDc5NS00MjA3LWJlYmQtMDg5MjM1OWFiYmRi; ME_SID=MzI1NjllNDEtZGFiZi00NmYzLWIyNzktNTIxZWJmYzE4NTA0; _ga_J1CFQQ9G2C=GS2.1.s1759640806$o8$g1$t1759640944$j51$l0$h0
+origin
+https://me.ananti.kr
+priority
+u=1, i
+referer
+https://me.ananti.kr/user/signin?loginRtnUrl=https%3A%2F%2Fananti.kr%2Fko&_gl=1*j6486e*_gcl_aw*R0NMLjE3NTk2NDA4MDcuQ2p3S0NBandpNFBIQmhBLUVpd0FualRIdVRoVlVLRHdPbTBxaHd3SWFyal83OVVTbWRfNHZ0YkdOZ1FyZXUyak9ldkdMRTN2Mk4wQ2pSb0NKbzhRQXZEX0J3RQ..*_gcl_au*MTc5NjEwMDI4Ny4xNzU5NjM2NzUw*_ga*OTExMzMxMzEuMTc0NTU2NTcwMw..*_ga_J1CFQQ9G2C*czE3NTk2NDA4MDYkbzgkZzEkdDE3NTk2NDA5MzckajU4JGwwJGgw
+sec-ch-ua
+"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+x-requested-with
+XMLHttpRequest
