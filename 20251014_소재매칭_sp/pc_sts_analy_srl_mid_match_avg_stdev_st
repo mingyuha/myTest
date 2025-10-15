@@ -1,0 +1,1077 @@
+BEGIN
+    -- 2025-10-14 소형압연 아이디 매칭 데이터 평균,표준편차 작업
+    -- 작성일 : 2025-10-14
+    -- 수정일 : 2025-10-14
+    -- 작성자 : 하민규
+    -- 파라미터 : YYYY-MM-DD 형식의 문자열
+
+    -- 날짜 파라미터
+    DECLARE p_datetime DATETIME DEFAULT DATETIME_SUB(CURRENT_DATETIME('Asia/Seoul'), INTERVAL 2 DAY);
+    -- 토크 기준값
+    DECLARE p_torque_std INT64 DEFAULT 5;
+
+    IF LENGTH(p_date) > 0 THEN
+        SET p_datetime = DATETIME(p_date);
+    END IF;
+
+    INSERT INTO comm_analy.sts_analy_srl_mid_match_avg_stdev_st( rm_work_dte, rm_entry_dtm, lot_no, serial_no, heat_no, strnd_no, strnd_seq
+                                                         , avg_srlzone0401_16, avg_srlzone0401_9, avg_srlzone0401_10, avg_srlzone0401_11, avg_srlzone0401_13, avg_srlzone0401_14, avg_srlzone0401_15, avg_srlzone0401_24, avg_srlzone0401_17, avg_srlzone0401_18, avg_srlzone0401_19, avg_srlzone0401_21, avg_srlzone0401_22, avg_srlzone0401_23, avg_srlzone0401_32, avg_srlzone0401_25, avg_srlzone0401_26, avg_srlzone0401_27, avg_srlzone0401_29, avg_srlzone0401_30, avg_srlzone0401_31, avg_srlzone0401_40, avg_srlzone0401_33, avg_srlzone0401_34, avg_srlzone0401_35, avg_srlzone0401_37, avg_srlzone0401_38, avg_srlzone0401_39, avg_srlzone0401_4, avg_srlzone0401_7, avg_srlzone0401_8
+                                                         , avg_srlzone0402_10, avg_srlzone0402_3, avg_srlzone0402_4, avg_srlzone0402_5, avg_srlzone0402_7, avg_srlzone0402_8, avg_srlzone0402_9, avg_srlzone0402_18, avg_srlzone0402_11, avg_srlzone0402_12, avg_srlzone0402_13, avg_srlzone0402_15, avg_srlzone0402_16, avg_srlzone0402_17, avg_srlzone0402_26, avg_srlzone0402_19, avg_srlzone0402_20, avg_srlzone0402_21, avg_srlzone0402_23, avg_srlzone0402_24, avg_srlzone0402_25, avg_srlzone0402_34, avg_srlzone0402_27, avg_srlzone0402_28, avg_srlzone0402_29, avg_srlzone0402_31, avg_srlzone0402_32, avg_srlzone0402_33, avg_srlzone0402_1
+                                                         , avg_srlzone18_32, avg_srlzone18_29, avg_srlzone18_30, avg_srlzone18_31, avg_srlzone18_37, avg_srlzone18_39, avg_srlzone18_40, avg_srlzone18_41, avg_srlzone18_42, avg_srlzone18_43, avg_srlzone18_44, avg_srlzone18_45, avg_srlzone18_15, avg_srlzone18_2, avg_srlzone18_12, avg_srlzone18_13, avg_srlzone18_14, avg_srlzone18_20, avg_srlzone18_21, avg_srlzone18_22, avg_srlzone18_23, avg_srlzone18_24, avg_srlzone18_25, avg_srlzone18_26, avg_srlzone18_27, avg_srlzone18_28
+                                                         , avg_srlzone07_42, avg_srlzone07_39, avg_srlzone07_41, avg_srlzone07_44, avg_srlzone07_48, avg_srlzone07_47, avg_srlzone07_21, avg_srlzone07_19, avg_srlzone07_20, avg_srlzone07_22, avg_srlzone07_26, avg_srlzone07_27, avg_srlzone07_28, avg_srlzone07_31, avg_srlzone07_29, avg_srlzone07_30, avg_srlzone07_32, avg_srlzone07_36, avg_srlzone07_37, avg_srlzone07_38, avg_srlzone07_2, avg_srlzone07_5
+                                                         , avg_srlzone0801_5, avg_srlzone0801_2, avg_srlzone0801_3, avg_srlzone0801_4, avg_srlzone0801_6, avg_srlzone0801_7, avg_srlzone0801_8, avg_srlzone0801_9, avg_srlzone0801_10, avg_srlzone0801_11, avg_srlzone0801_12, avg_srlzone0801_13, avg_srlzone0801_14, avg_srlzone0801_42, avg_srlzone0801_43, avg_srlzone0801_44, avg_srlzone0801_45, avg_srlzone0801_46, avg_srlzone0801_47, avg_srlzone0801_48, avg_srlzone0801_49, avg_srlzone0801_50, avg_srlzone0801_51, avg_srlzone0801_52, avg_srlzone0801_19, avg_srlzone0801_16, avg_srlzone0801_17, avg_srlzone0801_18, avg_srlzone0801_20, avg_srlzone0801_21, avg_srlzone0801_22, avg_srlzone0801_23, avg_srlzone0801_24, avg_srlzone0801_25, avg_srlzone0801_26, avg_srlzone0801_27, avg_srlzone0801_53, avg_srlzone0801_29, avg_srlzone0801_32, avg_srlzone0801_35, avg_srlzone0801_36, avg_srlzone0801_39
+                                                         , avg_srlzone09_1, avg_srlzone1202_2, avg_srlzone1202_1, avg_srlzone1202_4, avg_srlzone1202_5, avg_srlzone1202_6, avg_srlzone13_2
+                                                         , avg_srlzone0803_42, avg_srlzone0803_41, avg_srlzone0803_47, avg_srlzone0803_48, avg_srlzone0803_49, avg_srlzone0803_50, avg_srlzone0803_150, avg_srlzone0803_174, avg_srlzone0803_185, avg_srlzone0803_191, avg_srlzone0803_53, avg_srlzone0803_54, avg_srlzone0803_59, avg_srlzone0803_60, avg_srlzone0803_61, avg_srlzone0803_186, avg_srlzone0803_192, avg_srlzone0803_151, avg_srlzone0803_175, avg_srlzone0803_65, avg_srlzone0803_64, avg_srlzone0803_70, avg_srlzone0803_71, avg_srlzone0803_72, avg_srlzone0803_152, avg_srlzone0803_176, avg_srlzone0803_187, avg_srlzone0803_193, avg_srlzone0803_76, avg_srlzone0803_75, avg_srlzone0803_81, avg_srlzone0803_82, avg_srlzone0803_83, avg_srlzone0803_153, avg_srlzone0803_177, avg_srlzone0803_188, avg_srlzone0803_194, avg_srlzone0803_87, avg_srlzone0803_86, avg_srlzone0803_93, avg_srlzone0803_94, avg_srlzone0803_95, avg_srlzone0803_154, avg_srlzone0803_178, avg_srlzone0803_189, avg_srlzone0803_195, avg_srlzone0803_101, avg_srlzone0803_100, avg_srlzone0803_107, avg_srlzone0803_108, avg_srlzone0803_109, avg_srlzone0803_155, avg_srlzone0803_179, avg_srlzone0803_190, avg_srlzone0803_196, avg_srlzone0803_1, avg_srlzone0803_4, avg_srlzone0803_5, avg_srlzone0803_6, avg_srlzone0803_7, avg_srlzone0803_8, avg_srlzone0803_9, avg_srlzone0803_16, avg_srlzone0803_18, avg_srlzone0803_19, avg_srlzone0803_20, avg_srlzone0803_21, avg_srlzone0803_34, avg_srlzone0803_163, avg_srlzone0803_164, avg_srlzone0803_165, avg_srlzone0803_166, avg_srlzone0803_167, avg_srlzone0803_169, avg_srlzone0803_207, avg_srlzone0803_208, avg_srlzone0803_209, avg_srlzone0803_210, avg_srlzone0803_211, avg_srlzone0803_115, avg_srlzone0803_117, avg_srlzone0803_133
+                                                         , avg_srlzone10_19, avg_srlzone10_20, avg_srlzone10_21, avg_srlzone10_23, avg_srlzone10_24, avg_srlzone10_25, avg_srlzone10_26, avg_srlzone10_27, avg_srlzone10_29, avg_srlzone10_30, avg_srlzone10_31, avg_srlzone10_32, avg_srlzone10_33, avg_srlzone10_18, avg_srlzone10_1, avg_srlzone10_11, avg_srlzone10_12, avg_srlzone10_13, avg_srlzone10_14, avg_srlzone10_16, avg_srlzone10_17, avg_srlzone10_34, avg_srlzone10_37, avg_srlzone10_38, avg_srlzone10_8, avg_srlzone10_9
+                                                         , avg_srlzone11_7, avg_srlzone11_8, avg_srlzone11_10, avg_srlzone11_11, avg_srlzone11_12, avg_srlzone11_13, avg_srlzone11_14, avg_srlzone11_15, avg_srlzone11_16, avg_srlzone11_17, avg_srlzone11_21, avg_srlzone11_22, avg_srlzone11_23, avg_srlzone11_24, avg_srlzone11_25, avg_srlzone11_26, avg_srlzone11_27, avg_srlzone11_28, avg_srlzone11_34, avg_srlzone11_35, avg_srlzone11_36,
+                                                         std_dev_srlzone0401_16, std_dev_srlzone0401_9, std_dev_srlzone0401_10, std_dev_srlzone0401_11, std_dev_srlzone0401_13, std_dev_srlzone0401_14, std_dev_srlzone0401_15, std_dev_srlzone0401_24, std_dev_srlzone0401_17, std_dev_srlzone0401_18, std_dev_srlzone0401_19, std_dev_srlzone0401_21, std_dev_srlzone0401_22, std_dev_srlzone0401_23, std_dev_srlzone0401_32, std_dev_srlzone0401_25, std_dev_srlzone0401_26, std_dev_srlzone0401_27, std_dev_srlzone0401_29, std_dev_srlzone0401_30, std_dev_srlzone0401_31, std_dev_srlzone0401_40, std_dev_srlzone0401_33, std_dev_srlzone0401_34, std_dev_srlzone0401_35, std_dev_srlzone0401_37, std_dev_srlzone0401_38, std_dev_srlzone0401_39, std_dev_srlzone0401_4, std_dev_srlzone0401_7, std_dev_srlzone0401_8
+                                                         , std_dev_srlzone0402_10, std_dev_srlzone0402_3, std_dev_srlzone0402_4, std_dev_srlzone0402_5, std_dev_srlzone0402_7, std_dev_srlzone0402_8, std_dev_srlzone0402_9, std_dev_srlzone0402_18, std_dev_srlzone0402_11, std_dev_srlzone0402_12, std_dev_srlzone0402_13, std_dev_srlzone0402_15, std_dev_srlzone0402_16, std_dev_srlzone0402_17, std_dev_srlzone0402_26, std_dev_srlzone0402_19, std_dev_srlzone0402_20, std_dev_srlzone0402_21, std_dev_srlzone0402_23, std_dev_srlzone0402_24, std_dev_srlzone0402_25, std_dev_srlzone0402_34, std_dev_srlzone0402_27, std_dev_srlzone0402_28, std_dev_srlzone0402_29, std_dev_srlzone0402_31, std_dev_srlzone0402_32, std_dev_srlzone0402_33, std_dev_srlzone0402_1
+                                                         , std_dev_srlzone18_32, std_dev_srlzone18_29, std_dev_srlzone18_30, std_dev_srlzone18_31, std_dev_srlzone18_37, std_dev_srlzone18_39, std_dev_srlzone18_40, std_dev_srlzone18_41, std_dev_srlzone18_42, std_dev_srlzone18_43, std_dev_srlzone18_44, std_dev_srlzone18_45, std_dev_srlzone18_15, std_dev_srlzone18_2, std_dev_srlzone18_12, std_dev_srlzone18_13, std_dev_srlzone18_14, std_dev_srlzone18_20, std_dev_srlzone18_21, std_dev_srlzone18_22, std_dev_srlzone18_23, std_dev_srlzone18_24, std_dev_srlzone18_25, std_dev_srlzone18_26, std_dev_srlzone18_27, std_dev_srlzone18_28
+                                                         , std_dev_srlzone07_42, std_dev_srlzone07_39, std_dev_srlzone07_41, std_dev_srlzone07_44, std_dev_srlzone07_48, std_dev_srlzone07_47, std_dev_srlzone07_21, std_dev_srlzone07_19, std_dev_srlzone07_20, std_dev_srlzone07_22, std_dev_srlzone07_26, std_dev_srlzone07_27, std_dev_srlzone07_28, std_dev_srlzone07_31, std_dev_srlzone07_29, std_dev_srlzone07_30, std_dev_srlzone07_32, std_dev_srlzone07_36, std_dev_srlzone07_37, std_dev_srlzone07_38, std_dev_srlzone07_2, std_dev_srlzone07_5
+                                                         , std_dev_srlzone0801_5, std_dev_srlzone0801_2, std_dev_srlzone0801_3, std_dev_srlzone0801_4, std_dev_srlzone0801_6, std_dev_srlzone0801_7, std_dev_srlzone0801_8, std_dev_srlzone0801_9, std_dev_srlzone0801_10, std_dev_srlzone0801_11, std_dev_srlzone0801_12, std_dev_srlzone0801_13, std_dev_srlzone0801_14, std_dev_srlzone0801_42, std_dev_srlzone0801_43, std_dev_srlzone0801_44, std_dev_srlzone0801_45, std_dev_srlzone0801_46, std_dev_srlzone0801_47, std_dev_srlzone0801_48, std_dev_srlzone0801_49, std_dev_srlzone0801_50, std_dev_srlzone0801_51, std_dev_srlzone0801_52, std_dev_srlzone0801_19, std_dev_srlzone0801_16, std_dev_srlzone0801_17, std_dev_srlzone0801_18, std_dev_srlzone0801_20, std_dev_srlzone0801_21, std_dev_srlzone0801_22, std_dev_srlzone0801_23, std_dev_srlzone0801_24, std_dev_srlzone0801_25, std_dev_srlzone0801_26, std_dev_srlzone0801_27, std_dev_srlzone0801_53, std_dev_srlzone0801_29, std_dev_srlzone0801_32, std_dev_srlzone0801_35, std_dev_srlzone0801_36, std_dev_srlzone0801_39
+                                                         , std_dev_srlzone09_1, std_dev_srlzone1202_2, std_dev_srlzone1202_1, std_dev_srlzone1202_4, std_dev_srlzone1202_5, std_dev_srlzone1202_6, std_dev_srlzone13_2
+                                                         , std_dev_srlzone0803_42, std_dev_srlzone0803_41, std_dev_srlzone0803_47, std_dev_srlzone0803_48, std_dev_srlzone0803_49, std_dev_srlzone0803_50, std_dev_srlzone0803_150, std_dev_srlzone0803_174, std_dev_srlzone0803_185, std_dev_srlzone0803_191, std_dev_srlzone0803_53, std_dev_srlzone0803_54, std_dev_srlzone0803_59, std_dev_srlzone0803_60, std_dev_srlzone0803_61, std_dev_srlzone0803_186, std_dev_srlzone0803_192, std_dev_srlzone0803_151, std_dev_srlzone0803_175, std_dev_srlzone0803_65, std_dev_srlzone0803_64, std_dev_srlzone0803_70, std_dev_srlzone0803_71, std_dev_srlzone0803_72, std_dev_srlzone0803_152, std_dev_srlzone0803_176, std_dev_srlzone0803_187, std_dev_srlzone0803_193, std_dev_srlzone0803_76, std_dev_srlzone0803_75, std_dev_srlzone0803_81, std_dev_srlzone0803_82, std_dev_srlzone0803_83, std_dev_srlzone0803_153, std_dev_srlzone0803_177, std_dev_srlzone0803_188, std_dev_srlzone0803_194, std_dev_srlzone0803_87, std_dev_srlzone0803_86, std_dev_srlzone0803_93, std_dev_srlzone0803_94, std_dev_srlzone0803_95, std_dev_srlzone0803_154, std_dev_srlzone0803_178, std_dev_srlzone0803_189, std_dev_srlzone0803_195, std_dev_srlzone0803_101, std_dev_srlzone0803_100, std_dev_srlzone0803_107, std_dev_srlzone0803_108, std_dev_srlzone0803_109, std_dev_srlzone0803_155, std_dev_srlzone0803_179, std_dev_srlzone0803_190, std_dev_srlzone0803_196, std_dev_srlzone0803_1, std_dev_srlzone0803_4, std_dev_srlzone0803_5, std_dev_srlzone0803_6, std_dev_srlzone0803_7, std_dev_srlzone0803_8, std_dev_srlzone0803_9, std_dev_srlzone0803_16, std_dev_srlzone0803_18, std_dev_srlzone0803_19, std_dev_srlzone0803_20, std_dev_srlzone0803_21, std_dev_srlzone0803_34, std_dev_srlzone0803_163, std_dev_srlzone0803_164, std_dev_srlzone0803_165, std_dev_srlzone0803_166, std_dev_srlzone0803_167, std_dev_srlzone0803_169, std_dev_srlzone0803_207, std_dev_srlzone0803_208, std_dev_srlzone0803_209, std_dev_srlzone0803_210, std_dev_srlzone0803_211, std_dev_srlzone0803_115, std_dev_srlzone0803_117, std_dev_srlzone0803_133
+                                                         , std_dev_srlzone10_19, std_dev_srlzone10_20, std_dev_srlzone10_21, std_dev_srlzone10_23, std_dev_srlzone10_24, std_dev_srlzone10_25, std_dev_srlzone10_26, std_dev_srlzone10_27, std_dev_srlzone10_29, std_dev_srlzone10_30, std_dev_srlzone10_31, std_dev_srlzone10_32, std_dev_srlzone10_33, std_dev_srlzone10_18, std_dev_srlzone10_1, std_dev_srlzone10_11, std_dev_srlzone10_12, std_dev_srlzone10_13, std_dev_srlzone10_14, std_dev_srlzone10_16, std_dev_srlzone10_17, std_dev_srlzone10_34, std_dev_srlzone10_37, std_dev_srlzone10_38, std_dev_srlzone10_8, std_dev_srlzone10_9
+                                                         , std_dev_srlzone11_7, std_dev_srlzone11_8, std_dev_srlzone11_10, std_dev_srlzone11_11, std_dev_srlzone11_12, std_dev_srlzone11_13, std_dev_srlzone11_14, std_dev_srlzone11_15, std_dev_srlzone11_16, std_dev_srlzone11_17, std_dev_srlzone11_21, std_dev_srlzone11_22, std_dev_srlzone11_23, std_dev_srlzone11_24, std_dev_srlzone11_25, std_dev_srlzone11_26, std_dev_srlzone11_27, std_dev_srlzone11_28, std_dev_srlzone11_34, std_dev_srlzone11_35, std_dev_srlzone11_36)
+        (WITH w AS (SELECT DISTINCT lot_no
+                      FROM srl_l2.srl_workorder_mt
+                     WHERE 
+                        trktime >= DATETIME_SUB(p_datetime, INTERVAL 2 MONTH) AND 
+                        trktime < DATETIME_ADD(p_datetime, INTERVAL 1 DAY) AND 
+                        <!-- trktime BETWEEN DATETIME("2023-01-21 12:37:00") AND DATETIME("2023-01-21 14:07:20") and -->
+                        company_steel_grade_name in ('316LDS1', 'STS410S5','STS304SX','STS303S1','316LDSZ')
+                   )
+            , cp3 AS (SELECT DISTINCT lot_no
+                                    , LPAD(CAST(serial_no AS STRING), 3, '0') AS lot_no_seq_no
+                                    , str_no
+                                    , ser_no
+                        FROM srl_mes.cp3_work_result_mt
+                       WHERE work_date BETWEEN DATETIME_SUB(p_datetime, INTERVAL 2 MONTH) AND p_datetime
+                         AND str_no IS NOT NULL
+                         AND ser_no IS NOT NULL
+                   )
+            , worked_billet_list AS (SELECT t.lot_no
+                                          , t.lot_no_seq_no
+                                       FROM (SELECT DISTINCT lot_no
+                                                           , lot_no_seq_no
+                                               FROM srl_l2.srl_zone_mid_trk_mt
+                                              WHERE trk_dtm >= p_datetime
+                                                AND trk_dtm < DATETIME_ADD(p_datetime, INTERVAL 1 DAY)
+                                                AND zone_nm = '소형압연 Zone4-ST1_4'
+                                                AND is_anomaly = 'N'
+                                            ) t
+                                           INNER JOIN w
+                                           ON t.lot_no = w.lot_no
+                   )
+            , trk AS (SELECT i.zone_cd
+                           , t.zone_nm
+                           , t.heat_no
+                           , cp3.str_no
+                           , cp3.ser_no
+                           , t.lot_no
+                           , t.lot_no_seq_no
+                           , t.lot_tot_proc_seq_no
+                           , t.entry_dtm
+                           , t.exit_dtm
+                        FROM (SELECT zone_nm
+                                   , heat_no
+                                   , lot_no
+                                   , lot_no_seq_no
+                                   , lot_tot_proc_seq_no
+                                   , entry_dtm
+                                   , exit_dtm
+                                   , is_anomaly
+                                FROM srl_l2.srl_zone_mid_trk_mt
+                               WHERE trk_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR)
+                                 AND trk_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR)
+                                 AND (lot_no, lot_no_seq_no) IN (SELECT (lot_no, lot_no_seq_no) FROM worked_billet_list)
+                                 AND zone_nm IN ('소형압연 Zone4-ST1_4',
+                                                 '소형압연 Zone4-ST5_8',
+                                                 '소형압연 Zone18-STAND9_SHEAR10',
+                                                 '소형압연 Zone7-KOCKS500',
+                                                 '소형압연 Zone8-3LOOP',
+                                                 '소형압연 Zone8-RSB',
+                                                 '소형압연 Zone9-COMBINED_SHEAR',
+                                                 '소형압연 Zone10-PREFINISHING',
+                                                 '소형압연 Zone11-NTM',
+                                                 '소형압연 Zone12-RSM',
+                                                 '소형압연 Zone13-RTD_LH')
+                             ) AS t
+                            INNER JOIN cp3
+                            ON t.lot_no = cp3.lot_no AND t.lot_no_seq_no = cp3.lot_no_seq_no
+                            INNER JOIN srl_l2.srl_zone_info_mt i
+                            ON t.zone_nm = i.zone_nm
+                     QUALIFY COUNTIF(is_anomaly = 'Y') OVER (PARTITION BY t.lot_no, t.lot_no_seq_no) = 0
+                   )
+            , sec AS (SELECT DATETIME(stats_sec_dtm) AS stats_sec_dtm
+                        FROM UNNEST(GENERATE_TIMESTAMP_ARRAY(TIMESTAMP_SUB(TIMESTAMP(p_datetime), INTERVAL 6 HOUR), TIMESTAMP_ADD(TIMESTAMP(p_datetime), INTERVAL 30 HOUR), INTERVAL 1 SECOND)) AS stats_sec_dtm
+                   )
+            -- Zone4-ST1_4
+            , z0401 AS (SELECT 'SRLZONE0401' AS zone_cd, * FROM srl_tag.tag_sec_zone0401_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone4-ST5_8
+            , z0402 AS (SELECT 'SRLZONE0402' AS zone_cd, * FROM srl_tag.tag_sec_zone0402_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- '소형압연 Zone18-STAND9_SHEAR10'
+            , z18 AS (SELECT 'SRLZONE18' AS zone_cd, * FROM srl_tag.tag_sec_zone18_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone7-KOCKS500
+            , z07 AS (SELECT 'SRLZONE07' AS zone_cd, * FROM srl_tag.tag_sec_zone07_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone8-3LOOP
+            , z0801 AS (SELECT 'SRLZONE0801' AS zone_cd, * FROM srl_tag.tag_sec_zone0801_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone8-RSB
+            , z0803 AS (SELECT 'SRLZONE0803' AS zone_cd, * FROM srl_tag.tag_sec_zone0803_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone9-COMBINED_SHEAR
+            , z09 AS (SELECT 'SRLZONE09' AS zone_cd, * FROM srl_tag.tag_sec_zone09_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone10-PREFINISHING
+            , z10 AS (SELECT 'SRLZONE10' AS zone_cd, * FROM srl_tag.tag_sec_zone10_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone11-NTM
+            , z11 AS (SELECT 'SRLZONE11' AS zone_cd, * FROM srl_tag.tag_sec_zone11_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone12-RSM
+            , z1202 AS (SELECT 'SRLZONE1202' AS zone_cd, * FROM srl_tag.tag_sec_zone1202_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+            -- Zone13-RTD_LH
+            , z13 AS (SELECT 'SRLZONE13' AS zone_cd, * FROM srl_tag.tag_sec_zone13_st WHERE stats_sec_dtm >= DATETIME_SUB(p_datetime, INTERVAL 6 HOUR) AND stats_sec_dtm < DATETIME_ADD(p_datetime, INTERVAL 30 HOUR))
+       SELECT DATE(MIN(rm_entry_dtm))        AS rm_work_dte -- 조압연 통과일
+            , MIN(rm_entry_dtm)              AS rm_entry_dtm
+            , lot_no
+            , lot_no_seq_no                  AS serial_no
+            , heat_no
+            , CAST(str_no AS STRING)         AS strnd_no
+            , CAST(ser_no AS STRING)         AS strnd_seq
+            , ROUND(AVG(srlzone0401_16), 4)  AS avg_srlzone0401_16
+            , ROUND(AVG(srlzone0401_9), 4)   AS avg_srlzone0401_9
+            , ROUND(AVG(srlzone0401_10), 4)  AS avg_srlzone0401_10
+            , ROUND(AVG(srlzone0401_11), 4)  AS avg_srlzone0401_11
+            , ROUND(AVG(srlzone0401_13), 4)  AS avg_srlzone0401_13
+            , ROUND(AVG(srlzone0401_14), 4)  AS avg_srlzone0401_14
+            , ROUND(AVG(srlzone0401_15), 4)  AS avg_srlzone0401_15
+            , ROUND(AVG(srlzone0401_24), 4)  AS avg_srlzone0401_24
+            , ROUND(AVG(srlzone0401_17), 4)  AS avg_srlzone0401_17
+            , ROUND(AVG(srlzone0401_18), 4)  AS avg_srlzone0401_18
+            , ROUND(AVG(srlzone0401_19), 4)  AS avg_srlzone0401_19
+            , ROUND(AVG(srlzone0401_21), 4)  AS avg_srlzone0401_21
+            , ROUND(AVG(srlzone0401_22), 4)  AS avg_srlzone0401_22
+            , ROUND(AVG(srlzone0401_23), 4)  AS avg_srlzone0401_23
+            , ROUND(AVG(srlzone0401_32), 4)  AS avg_srlzone0401_32
+            , ROUND(AVG(srlzone0401_25), 4)  AS avg_srlzone0401_25
+            , ROUND(AVG(srlzone0401_26), 4)  AS avg_srlzone0401_26
+            , ROUND(AVG(srlzone0401_27), 4)  AS avg_srlzone0401_27
+            , ROUND(AVG(srlzone0401_29), 4)  AS avg_srlzone0401_29
+            , ROUND(AVG(srlzone0401_30), 4)  AS avg_srlzone0401_30
+            , ROUND(AVG(srlzone0401_31), 4)  AS avg_srlzone0401_31
+            , ROUND(AVG(srlzone0401_40), 4)  AS avg_srlzone0401_40
+            , ROUND(AVG(srlzone0401_33), 4)  AS avg_srlzone0401_33
+            , ROUND(AVG(srlzone0401_34), 4)  AS avg_srlzone0401_34
+            , ROUND(AVG(srlzone0401_35), 4)  AS avg_srlzone0401_35
+            , ROUND(AVG(srlzone0401_37), 4)  AS avg_srlzone0401_37
+            , ROUND(AVG(srlzone0401_38), 4)  AS avg_srlzone0401_38
+            , ROUND(AVG(srlzone0401_39), 4)  AS avg_srlzone0401_39
+            , ROUND(AVG(srlzone0401_4), 4)   AS avg_srlzone0401_4
+            , ROUND(AVG(srlzone0401_7), 4)   AS avg_srlzone0401_7
+            , ROUND(AVG(srlzone0401_8), 4)   AS avg_srlzone0401_8
+            , ROUND(AVG(srlzone0402_10), 4)  AS avg_srlzone0402_10
+            , ROUND(AVG(srlzone0402_3), 4)   AS avg_srlzone0402_3
+            , ROUND(AVG(srlzone0402_4), 4)   AS avg_srlzone0402_4
+            , ROUND(AVG(srlzone0402_5), 4)   AS avg_srlzone0402_5
+            , ROUND(AVG(srlzone0402_7), 4)   AS avg_srlzone0402_7
+            , ROUND(AVG(srlzone0402_8), 4)   AS avg_srlzone0402_8
+            , ROUND(AVG(srlzone0402_9), 4)   AS avg_srlzone0402_9
+            , ROUND(AVG(srlzone0402_18), 4)  AS avg_srlzone0402_18
+            , ROUND(AVG(srlzone0402_11), 4)  AS avg_srlzone0402_11
+            , ROUND(AVG(srlzone0402_12), 4)  AS avg_srlzone0402_12
+            , ROUND(AVG(srlzone0402_13), 4)  AS avg_srlzone0402_13
+            , ROUND(AVG(srlzone0402_15), 4)  AS avg_srlzone0402_15
+            , ROUND(AVG(srlzone0402_16), 4)  AS avg_srlzone0402_16
+            , ROUND(AVG(srlzone0402_17), 4)  AS avg_srlzone0402_17
+            , ROUND(AVG(srlzone0402_26), 4)  AS avg_srlzone0402_26
+            , ROUND(AVG(srlzone0402_19), 4)  AS avg_srlzone0402_19
+            , ROUND(AVG(srlzone0402_20), 4)  AS avg_srlzone0402_20
+            , ROUND(AVG(srlzone0402_21), 4)  AS avg_srlzone0402_21
+            , ROUND(AVG(srlzone0402_23), 4)  AS avg_srlzone0402_23
+            , ROUND(AVG(srlzone0402_24), 4)  AS avg_srlzone0402_24
+            , ROUND(AVG(srlzone0402_25), 4)  AS avg_srlzone0402_25
+            , ROUND(AVG(srlzone0402_34), 4)  AS avg_srlzone0402_34
+            , ROUND(AVG(srlzone0402_27), 4)  AS avg_srlzone0402_27
+            , ROUND(AVG(srlzone0402_28), 4)  AS avg_srlzone0402_28
+            , ROUND(AVG(srlzone0402_29), 4)  AS avg_srlzone0402_29
+            , ROUND(AVG(srlzone0402_31), 4)  AS avg_srlzone0402_31
+            , ROUND(AVG(srlzone0402_32), 4)  AS avg_srlzone0402_32
+            , ROUND(AVG(srlzone0402_33), 4)  AS avg_srlzone0402_33
+            , ROUND(AVG(srlzone0402_1), 4)   AS avg_srlzone0402_1
+            , ROUND(AVG(srlzone18_32), 4)    AS avg_srlzone18_32
+            , ROUND(AVG(srlzone18_29), 4)    AS avg_srlzone18_29
+            , ROUND(AVG(srlzone18_30), 4)    AS avg_srlzone18_30
+            , ROUND(AVG(srlzone18_31), 4)    AS avg_srlzone18_31
+            , ROUND(AVG(srlzone18_37), 4)    AS avg_srlzone18_37
+            , ROUND(AVG(srlzone18_39), 4)    AS avg_srlzone18_39
+            , ROUND(AVG(srlzone18_40), 4)    AS avg_srlzone18_40
+            , ROUND(AVG(srlzone18_41), 4)    AS avg_srlzone18_41
+            , ROUND(AVG(srlzone18_42), 4)    AS avg_srlzone18_42
+            , ROUND(AVG(srlzone18_43), 4)    AS avg_srlzone18_43
+            , ROUND(AVG(srlzone18_44), 4)    AS avg_srlzone18_44
+            , ROUND(AVG(srlzone18_45), 4)    AS avg_srlzone18_45
+            , ROUND(AVG(srlzone18_15), 4)    AS avg_srlzone18_15
+            , ROUND(AVG(srlzone18_2), 4)     AS avg_srlzone18_2
+            , ROUND(AVG(srlzone18_12), 4)    AS avg_srlzone18_12
+            , ROUND(AVG(srlzone18_13), 4)    AS avg_srlzone18_13
+            , ROUND(AVG(srlzone18_14), 4)    AS avg_srlzone18_14
+            , ROUND(AVG(srlzone18_20), 4)    AS avg_srlzone18_20
+            , ROUND(AVG(srlzone18_21), 4)    AS avg_srlzone18_21
+            , ROUND(AVG(srlzone18_22), 4)    AS avg_srlzone18_22
+            , ROUND(AVG(srlzone18_23), 4)    AS avg_srlzone18_23
+            , ROUND(AVG(srlzone18_24), 4)    AS avg_srlzone18_24
+            , ROUND(AVG(srlzone18_25), 4)    AS avg_srlzone18_25
+            , ROUND(AVG(srlzone18_26), 4)    AS avg_srlzone18_26
+            , ROUND(AVG(srlzone18_27), 4)    AS avg_srlzone18_27
+            , ROUND(AVG(srlzone18_28), 4)    AS avg_srlzone18_28
+            , ROUND(AVG(srlzone07_42), 4)    AS avg_srlzone07_42
+            , ROUND(AVG(srlzone07_39), 4)    AS avg_srlzone07_39
+            , ROUND(AVG(srlzone07_41), 4)    AS avg_srlzone07_41
+            , ROUND(AVG(srlzone07_44), 4)    AS avg_srlzone07_44
+            , ROUND(AVG(srlzone07_48), 4)    AS avg_srlzone07_48
+            , ROUND(AVG(srlzone07_47), 4)    AS avg_srlzone07_47
+            , ROUND(AVG(srlzone07_21), 4)    AS avg_srlzone07_21
+            , ROUND(AVG(srlzone07_19), 4)    AS avg_srlzone07_19
+            , ROUND(AVG(srlzone07_20), 4)    AS avg_srlzone07_20
+            , ROUND(AVG(srlzone07_22), 4)    AS avg_srlzone07_22
+            , ROUND(AVG(srlzone07_26), 4)    AS avg_srlzone07_26
+            , ROUND(AVG(srlzone07_27), 4)    AS avg_srlzone07_27
+            , ROUND(AVG(srlzone07_28), 4)    AS avg_srlzone07_28
+            , ROUND(AVG(srlzone07_31), 4)    AS avg_srlzone07_31
+            , ROUND(AVG(srlzone07_29), 4)    AS avg_srlzone07_29
+            , ROUND(AVG(srlzone07_30), 4)    AS avg_srlzone07_30
+            , ROUND(AVG(srlzone07_32), 4)    AS avg_srlzone07_32
+            , ROUND(AVG(srlzone07_36), 4)    AS avg_srlzone07_36
+            , ROUND(AVG(srlzone07_37), 4)    AS avg_srlzone07_37
+            , ROUND(AVG(srlzone07_38), 4)    AS avg_srlzone07_38
+            , ROUND(AVG(srlzone07_2), 4)     AS avg_srlzone07_2
+            , ROUND(AVG(srlzone07_5), 4)     AS avg_srlzone07_5
+            , ROUND(AVG(srlzone0801_5), 4)   AS avg_srlzone0801_5
+            , ROUND(AVG(srlzone0801_2), 4)   AS avg_srlzone0801_2
+            , ROUND(AVG(srlzone0801_3), 4)   AS avg_srlzone0801_3
+            , ROUND(AVG(srlzone0801_4), 4)   AS avg_srlzone0801_4
+            , ROUND(AVG(srlzone0801_6), 4)   AS avg_srlzone0801_6
+            , ROUND(AVG(srlzone0801_7), 4)   AS avg_srlzone0801_7
+            , ROUND(AVG(srlzone0801_8), 4)   AS avg_srlzone0801_8
+            , ROUND(AVG(srlzone0801_9), 4)   AS avg_srlzone0801_9
+            , ROUND(AVG(srlzone0801_10), 4)  AS avg_srlzone0801_10
+            , ROUND(AVG(srlzone0801_11), 4)  AS avg_srlzone0801_11
+            , ROUND(AVG(srlzone0801_12), 4)  AS avg_srlzone0801_12
+            , ROUND(AVG(srlzone0801_13), 4)  AS avg_srlzone0801_13
+            , ROUND(AVG(srlzone0801_14), 4)  AS avg_srlzone0801_14
+            , ROUND(AVG(srlzone0801_42), 4)  AS avg_srlzone0801_42
+            , ROUND(AVG(srlzone0801_43), 4)  AS avg_srlzone0801_43
+            , ROUND(AVG(srlzone0801_44), 4)  AS avg_srlzone0801_44
+            , ROUND(AVG(srlzone0801_45), 4)  AS avg_srlzone0801_45
+            , ROUND(AVG(srlzone0801_46), 4)  AS avg_srlzone0801_46
+            , ROUND(AVG(srlzone0801_47), 4)  AS avg_srlzone0801_47
+            , ROUND(AVG(srlzone0801_48), 4)  AS avg_srlzone0801_48
+            , ROUND(AVG(srlzone0801_49), 4)  AS avg_srlzone0801_49
+            , ROUND(AVG(srlzone0801_50), 4)  AS avg_srlzone0801_50
+            , ROUND(AVG(srlzone0801_51), 4)  AS avg_srlzone0801_51
+            , ROUND(AVG(srlzone0801_52), 4)  AS avg_srlzone0801_52
+            , ROUND(AVG(srlzone0801_19), 4)  AS avg_srlzone0801_19
+            , ROUND(AVG(srlzone0801_16), 4)  AS avg_srlzone0801_16
+            , ROUND(AVG(srlzone0801_17), 4)  AS avg_srlzone0801_17
+            , ROUND(AVG(srlzone0801_18), 4)  AS avg_srlzone0801_18
+            , ROUND(AVG(srlzone0801_20), 4)  AS avg_srlzone0801_20
+            , ROUND(AVG(srlzone0801_21), 4)  AS avg_srlzone0801_21
+            , ROUND(AVG(srlzone0801_22), 4)  AS avg_srlzone0801_22
+            , ROUND(AVG(srlzone0801_23), 4)  AS avg_srlzone0801_23
+            , ROUND(AVG(srlzone0801_24), 4)  AS avg_srlzone0801_24
+            , ROUND(AVG(srlzone0801_25), 4)  AS avg_srlzone0801_25
+            , ROUND(AVG(srlzone0801_26), 4)  AS avg_srlzone0801_26
+            , ROUND(AVG(srlzone0801_27), 4)  AS avg_srlzone0801_27
+            , ROUND(AVG(srlzone0801_53), 4)  AS avg_srlzone0801_53
+            , ROUND(AVG(srlzone0801_29), 4)  AS avg_srlzone0801_29
+            , ROUND(AVG(srlzone0801_32), 4)  AS avg_srlzone0801_32
+            , ROUND(AVG(srlzone0801_35), 4)  AS avg_srlzone0801_35
+            , ROUND(AVG(srlzone0801_36), 4)  AS avg_srlzone0801_36
+            , ROUND(AVG(srlzone0801_39), 4)  AS avg_srlzone0801_39
+            , ROUND(AVG(srlzone09_1), 4)     AS avg_srlzone09_1
+            , ROUND(AVG(srlzone1202_2), 4)   AS avg_srlzone1202_2
+            , ROUND(AVG(srlzone1202_1), 4)   AS avg_srlzone1202_1
+            , ROUND(AVG(srlzone1202_4), 4)   AS avg_srlzone1202_4
+            , ROUND(AVG(srlzone1202_5), 4)   AS avg_srlzone1202_5
+            , ROUND(AVG(srlzone1202_6), 4)   AS avg_srlzone1202_6
+            , ROUND(AVG(srlzone13_2), 4)     AS avg_srlzone13_2
+            , ROUND(AVG(srlzone0803_42), 4)  AS avg_srlzone0803_42
+            , ROUND(AVG(srlzone0803_41), 4)  AS avg_srlzone0803_41
+            , ROUND(AVG(srlzone0803_47), 4)  AS avg_srlzone0803_47
+            , ROUND(AVG(srlzone0803_48), 4)  AS avg_srlzone0803_48
+            , ROUND(AVG(srlzone0803_49), 4)  AS avg_srlzone0803_49
+            , ROUND(AVG(srlzone0803_50), 4)  AS avg_srlzone0803_50
+            , ROUND(AVG(srlzone0803_150), 4) AS avg_srlzone0803_150
+            , ROUND(AVG(srlzone0803_174), 4) AS avg_srlzone0803_174
+            , ROUND(AVG(srlzone0803_185), 4) AS avg_srlzone0803_185
+            , ROUND(AVG(srlzone0803_191), 4) AS avg_srlzone0803_191
+            , ROUND(AVG(srlzone0803_53), 4)  AS avg_srlzone0803_53
+            , ROUND(AVG(srlzone0803_54), 4)  AS avg_srlzone0803_54
+            , ROUND(AVG(srlzone0803_59), 4)  AS avg_srlzone0803_59
+            , ROUND(AVG(srlzone0803_60), 4)  AS avg_srlzone0803_60
+            , ROUND(AVG(srlzone0803_61), 4)  AS avg_srlzone0803_61
+            , ROUND(AVG(srlzone0803_186), 4) AS avg_srlzone0803_186
+            , ROUND(AVG(srlzone0803_192), 4) AS avg_srlzone0803_192
+            , ROUND(AVG(srlzone0803_151), 4) AS avg_srlzone0803_151
+            , ROUND(AVG(srlzone0803_175), 4) AS avg_srlzone0803_175
+            , ROUND(AVG(srlzone0803_65), 4)  AS avg_srlzone0803_65
+            , ROUND(AVG(srlzone0803_64), 4)  AS avg_srlzone0803_64
+            , ROUND(AVG(srlzone0803_70), 4)  AS avg_srlzone0803_70
+            , ROUND(AVG(srlzone0803_71), 4)  AS avg_srlzone0803_71
+            , ROUND(AVG(srlzone0803_72), 4)  AS avg_srlzone0803_72
+            , ROUND(AVG(srlzone0803_152), 4) AS avg_srlzone0803_152
+            , ROUND(AVG(srlzone0803_176), 4) AS avg_srlzone0803_176
+            , ROUND(AVG(srlzone0803_187), 4) AS avg_srlzone0803_187
+            , ROUND(AVG(srlzone0803_193), 4) AS avg_srlzone0803_193
+            , ROUND(AVG(srlzone0803_76), 4)  AS avg_srlzone0803_76
+            , ROUND(AVG(srlzone0803_75), 4)  AS avg_srlzone0803_75
+            , ROUND(AVG(srlzone0803_81), 4)  AS avg_srlzone0803_81
+            , ROUND(AVG(srlzone0803_82), 4)  AS avg_srlzone0803_82
+            , ROUND(AVG(srlzone0803_83), 4)  AS avg_srlzone0803_83
+            , ROUND(AVG(srlzone0803_153), 4) AS avg_srlzone0803_153
+            , ROUND(AVG(srlzone0803_177), 4) AS avg_srlzone0803_177
+            , ROUND(AVG(srlzone0803_188), 4) AS avg_srlzone0803_188
+            , ROUND(AVG(srlzone0803_194), 4) AS avg_srlzone0803_194
+            , ROUND(AVG(srlzone0803_87), 4)  AS avg_srlzone0803_87
+            , ROUND(AVG(srlzone0803_86), 4)  AS avg_srlzone0803_86
+            , ROUND(AVG(srlzone0803_93), 4)  AS avg_srlzone0803_93
+            , ROUND(AVG(srlzone0803_94), 4)  AS avg_srlzone0803_94
+            , ROUND(AVG(srlzone0803_95), 4)  AS avg_srlzone0803_95
+            , ROUND(AVG(srlzone0803_154), 4) AS avg_srlzone0803_154
+            , ROUND(AVG(srlzone0803_178), 4) AS avg_srlzone0803_178
+            , ROUND(AVG(srlzone0803_189), 4) AS avg_srlzone0803_189
+            , ROUND(AVG(srlzone0803_195), 4) AS avg_srlzone0803_195
+            , ROUND(AVG(srlzone0803_101), 4) AS avg_srlzone0803_101
+            , ROUND(AVG(srlzone0803_100), 4) AS avg_srlzone0803_100
+            , ROUND(AVG(srlzone0803_107), 4) AS avg_srlzone0803_107
+            , ROUND(AVG(srlzone0803_108), 4) AS avg_srlzone0803_108
+            , ROUND(AVG(srlzone0803_109), 4) AS avg_srlzone0803_109
+            , ROUND(AVG(srlzone0803_155), 4) AS avg_srlzone0803_155
+            , ROUND(AVG(srlzone0803_179), 4) AS avg_srlzone0803_179
+            , ROUND(AVG(srlzone0803_190), 4) AS avg_srlzone0803_190
+            , ROUND(AVG(srlzone0803_196), 4) AS avg_srlzone0803_196
+            , ROUND(AVG(srlzone0803_1), 4)   AS avg_srlzone0803_1
+            , ROUND(AVG(srlzone0803_4), 4)   AS avg_srlzone0803_4
+            , ROUND(AVG(srlzone0803_5), 4)   AS avg_srlzone0803_5
+            , ROUND(AVG(srlzone0803_6), 4)   AS avg_srlzone0803_6
+            , ROUND(AVG(srlzone0803_7), 4)   AS avg_srlzone0803_7
+            , ROUND(AVG(srlzone0803_8), 4)   AS avg_srlzone0803_8
+            , ROUND(AVG(srlzone0803_9), 4)   AS avg_srlzone0803_9
+            , ROUND(AVG(srlzone0803_16), 4)  AS avg_srlzone0803_16
+            , ROUND(AVG(srlzone0803_18), 4)  AS avg_srlzone0803_18
+            , ROUND(AVG(srlzone0803_19), 4)  AS avg_srlzone0803_19
+            , ROUND(AVG(srlzone0803_20), 4)  AS avg_srlzone0803_20
+            , ROUND(AVG(srlzone0803_21), 4)  AS avg_srlzone0803_21
+            , ROUND(AVG(srlzone0803_34), 4)  AS avg_srlzone0803_34
+            , ROUND(AVG(srlzone0803_163), 4) AS avg_srlzone0803_163
+            , ROUND(AVG(srlzone0803_164), 4) AS avg_srlzone0803_164
+            , ROUND(AVG(srlzone0803_165), 4) AS avg_srlzone0803_165
+            , ROUND(AVG(srlzone0803_166), 4) AS avg_srlzone0803_166
+            , ROUND(AVG(srlzone0803_167), 4) AS avg_srlzone0803_167
+            , ROUND(AVG(srlzone0803_169), 4) AS avg_srlzone0803_169
+            , ROUND(AVG(srlzone0803_207), 4) AS avg_srlzone0803_207
+            , ROUND(AVG(srlzone0803_208), 4) AS avg_srlzone0803_208
+            , ROUND(AVG(srlzone0803_209), 4) AS avg_srlzone0803_209
+            , ROUND(AVG(srlzone0803_210), 4) AS avg_srlzone0803_210
+            , ROUND(AVG(srlzone0803_211), 4) AS avg_srlzone0803_211
+            , ROUND(AVG(srlzone0803_115), 4) AS avg_srlzone0803_115
+            , ROUND(AVG(srlzone0803_117), 4) AS avg_srlzone0803_117
+            , ROUND(AVG(srlzone0803_133), 4) AS avg_srlzone0803_133
+--             , ROUND(AVG(srlzone0803_134), 4) AS avg_srlzone0803_134 -- 소형압연 Zone8-3LOOP로 존 변경
+--             , ROUND(AVG(srlzone0803_135), 4) AS avg_srlzone0803_135 -- 소형압연 Zone8-3LOOP로 존 변경
+            , ROUND(AVG(srlzone10_19), 4)    AS avg_srlzone10_19
+            , ROUND(AVG(srlzone10_20), 4)    AS avg_srlzone10_20
+            , ROUND(AVG(srlzone10_21), 4)    AS avg_srlzone10_21
+            , ROUND(AVG(srlzone10_23), 4)    AS avg_srlzone10_23
+            , ROUND(AVG(srlzone10_24), 4)    AS avg_srlzone10_24
+            , ROUND(AVG(srlzone10_25), 4)    AS avg_srlzone10_25
+            , ROUND(AVG(srlzone10_26), 4)    AS avg_srlzone10_26
+            , ROUND(AVG(srlzone10_27), 4)    AS avg_srlzone10_27
+            , ROUND(AVG(srlzone10_29), 4)    AS avg_srlzone10_29
+            , ROUND(AVG(srlzone10_30), 4)    AS avg_srlzone10_30
+            , ROUND(AVG(srlzone10_31), 4)    AS avg_srlzone10_31
+            , ROUND(AVG(srlzone10_32), 4)    AS avg_srlzone10_32
+            , ROUND(AVG(srlzone10_33), 4)    AS avg_srlzone10_33
+            , ROUND(AVG(srlzone10_18), 4)    AS avg_srlzone10_18
+            , ROUND(AVG(srlzone10_1), 4)     AS avg_srlzone10_1
+            , ROUND(AVG(srlzone10_11), 4)    AS avg_srlzone10_11
+            , ROUND(AVG(srlzone10_12), 4)    AS avg_srlzone10_12
+            , ROUND(AVG(srlzone10_13), 4)    AS avg_srlzone10_13
+            , ROUND(AVG(srlzone10_14), 4)    AS avg_srlzone10_14
+            , ROUND(AVG(srlzone10_16), 4)    AS avg_srlzone10_16
+            , ROUND(AVG(srlzone10_17), 4)    AS avg_srlzone10_17
+            , ROUND(AVG(srlzone10_34), 4)    AS avg_srlzone10_34
+            , ROUND(AVG(srlzone10_37), 4)    AS avg_srlzone10_37
+            , ROUND(AVG(srlzone10_38), 4)    AS avg_srlzone10_38
+            , ROUND(AVG(srlzone10_8), 4)     AS avg_srlzone10_8
+            , ROUND(AVG(srlzone10_9), 4)     AS avg_srlzone10_9
+            , ROUND(AVG(srlzone11_7), 4)     AS avg_srlzone11_7
+            , ROUND(AVG(srlzone11_8), 4)     AS avg_srlzone11_8
+            , ROUND(AVG(srlzone11_10), 4)    AS avg_srlzone11_10
+            , ROUND(AVG(srlzone11_11), 4)    AS avg_srlzone11_11
+            , ROUND(AVG(srlzone11_12), 4)    AS avg_srlzone11_12
+            , ROUND(AVG(srlzone11_13), 4)    AS avg_srlzone11_13
+            , ROUND(AVG(srlzone11_14), 4)    AS avg_srlzone11_14
+            , ROUND(AVG(srlzone11_15), 4)    AS avg_srlzone11_15
+            , ROUND(AVG(srlzone11_16), 4)    AS avg_srlzone11_16
+            , ROUND(AVG(srlzone11_17), 4)    AS avg_srlzone11_17
+            , ROUND(AVG(srlzone11_21), 4)    AS avg_srlzone11_21
+            , ROUND(AVG(srlzone11_22), 4)    AS avg_srlzone11_22
+            , ROUND(AVG(srlzone11_23), 4)    AS avg_srlzone11_23
+            , ROUND(AVG(srlzone11_24), 4)    AS avg_srlzone11_24
+            , ROUND(AVG(srlzone11_25), 4)    AS avg_srlzone11_25
+            , ROUND(AVG(srlzone11_26), 4)    AS avg_srlzone11_26
+            , ROUND(AVG(srlzone11_27), 4)    AS avg_srlzone11_27
+            , ROUND(AVG(srlzone11_28), 4)    AS avg_srlzone11_28
+            , ROUND(AVG(srlzone11_34), 4)    AS avg_srlzone11_34
+            , ROUND(AVG(srlzone11_35), 4)    AS avg_srlzone11_35
+            , ROUND(AVG(srlzone11_36), 4)    AS avg_srlzone11_36
+            , CAST(ROUND(STDDEV(srlzone0401_16), 4) AS NUMERIC)  AS std_dev_srlzone0401_16
+            , CAST(ROUND(STDDEV(srlzone0401_9), 4) AS NUMERIC)   AS std_dev_srlzone0401_9
+            , CAST(ROUND(STDDEV(srlzone0401_10), 4) AS NUMERIC)  AS std_dev_srlzone0401_10
+            , CAST(ROUND(STDDEV(srlzone0401_11), 4) AS NUMERIC)  AS std_dev_srlzone0401_11
+            , CAST(ROUND(STDDEV(srlzone0401_13), 4) AS NUMERIC)  AS std_dev_srlzone0401_13
+            , CAST(ROUND(STDDEV(srlzone0401_14), 4) AS NUMERIC)  AS std_dev_srlzone0401_14
+            , CAST(ROUND(STDDEV(srlzone0401_15), 4) AS NUMERIC)  AS std_dev_srlzone0401_15
+            , CAST(ROUND(STDDEV(srlzone0401_24), 4) AS NUMERIC)  AS std_dev_srlzone0401_24
+            , CAST(ROUND(STDDEV(srlzone0401_17), 4) AS NUMERIC)  AS std_dev_srlzone0401_17
+            , CAST(ROUND(STDDEV(srlzone0401_18), 4) AS NUMERIC)  AS std_dev_srlzone0401_18
+            , CAST(ROUND(STDDEV(srlzone0401_19), 4) AS NUMERIC)  AS std_dev_srlzone0401_19
+            , CAST(ROUND(STDDEV(srlzone0401_21), 4) AS NUMERIC)  AS std_dev_srlzone0401_21
+            , CAST(ROUND(STDDEV(srlzone0401_22), 4) AS NUMERIC)  AS std_dev_srlzone0401_22
+            , CAST(ROUND(STDDEV(srlzone0401_23), 4) AS NUMERIC)  AS std_dev_srlzone0401_23
+            , CAST(ROUND(STDDEV(srlzone0401_32), 4) AS NUMERIC)  AS std_dev_srlzone0401_32
+            , CAST(ROUND(STDDEV(srlzone0401_25), 4) AS NUMERIC)  AS std_dev_srlzone0401_25
+            , CAST(ROUND(STDDEV(srlzone0401_26), 4) AS NUMERIC)  AS std_dev_srlzone0401_26
+            , CAST(ROUND(STDDEV(srlzone0401_27), 4) AS NUMERIC)  AS std_dev_srlzone0401_27
+            , CAST(ROUND(STDDEV(srlzone0401_29), 4) AS NUMERIC)  AS std_dev_srlzone0401_29
+            , CAST(ROUND(STDDEV(srlzone0401_30), 4) AS NUMERIC)  AS std_dev_srlzone0401_30
+            , CAST(ROUND(STDDEV(srlzone0401_31), 4) AS NUMERIC)  AS std_dev_srlzone0401_31
+            , CAST(ROUND(STDDEV(srlzone0401_40), 4) AS NUMERIC)  AS std_dev_srlzone0401_40
+            , CAST(ROUND(STDDEV(srlzone0401_33), 4) AS NUMERIC)  AS std_dev_srlzone0401_33
+            , CAST(ROUND(STDDEV(srlzone0401_34), 4) AS NUMERIC)  AS std_dev_srlzone0401_34
+            , CAST(ROUND(STDDEV(srlzone0401_35), 4) AS NUMERIC)  AS std_dev_srlzone0401_35
+            , CAST(ROUND(STDDEV(srlzone0401_37), 4) AS NUMERIC)  AS std_dev_srlzone0401_37
+            , CAST(ROUND(STDDEV(srlzone0401_38), 4) AS NUMERIC)  AS std_dev_srlzone0401_38
+            , CAST(ROUND(STDDEV(srlzone0401_39), 4) AS NUMERIC)  AS std_dev_srlzone0401_39
+            , CAST(ROUND(STDDEV(srlzone0401_4), 4) AS NUMERIC)   AS std_dev_srlzone0401_4
+            , CAST(ROUND(STDDEV(srlzone0401_7), 4) AS NUMERIC)   AS std_dev_srlzone0401_7
+            , CAST(ROUND(STDDEV(srlzone0401_8), 4) AS NUMERIC)   AS std_dev_srlzone0401_8
+            , CAST(ROUND(STDDEV(srlzone0402_10), 4) AS NUMERIC)  AS std_dev_srlzone0402_10
+            , CAST(ROUND(STDDEV(srlzone0402_3), 4) AS NUMERIC)   AS std_dev_srlzone0402_3
+            , CAST(ROUND(STDDEV(srlzone0402_4), 4) AS NUMERIC)   AS std_dev_srlzone0402_4
+            , CAST(ROUND(STDDEV(srlzone0402_5), 4) AS NUMERIC)   AS std_dev_srlzone0402_5
+            , CAST(ROUND(STDDEV(srlzone0402_7), 4) AS NUMERIC)   AS std_dev_srlzone0402_7
+            , CAST(ROUND(STDDEV(srlzone0402_8), 4) AS NUMERIC)   AS std_dev_srlzone0402_8
+            , CAST(ROUND(STDDEV(srlzone0402_9), 4) AS NUMERIC)   AS std_dev_srlzone0402_9
+            , CAST(ROUND(STDDEV(srlzone0402_18), 4) AS NUMERIC)  AS std_dev_srlzone0402_18
+            , CAST(ROUND(STDDEV(srlzone0402_11), 4) AS NUMERIC)  AS std_dev_srlzone0402_11
+            , CAST(ROUND(STDDEV(srlzone0402_12), 4) AS NUMERIC)  AS std_dev_srlzone0402_12
+            , CAST(ROUND(STDDEV(srlzone0402_13), 4) AS NUMERIC)  AS std_dev_srlzone0402_13
+            , CAST(ROUND(STDDEV(srlzone0402_15), 4) AS NUMERIC)  AS std_dev_srlzone0402_15
+            , CAST(ROUND(STDDEV(srlzone0402_16), 4) AS NUMERIC)  AS std_dev_srlzone0402_16
+            , CAST(ROUND(STDDEV(srlzone0402_17), 4) AS NUMERIC)  AS std_dev_srlzone0402_17
+            , CAST(ROUND(STDDEV(srlzone0402_26), 4) AS NUMERIC)  AS std_dev_srlzone0402_26
+            , CAST(ROUND(STDDEV(srlzone0402_19), 4) AS NUMERIC)  AS std_dev_srlzone0402_19
+            , CAST(ROUND(STDDEV(srlzone0402_20), 4) AS NUMERIC)  AS std_dev_srlzone0402_20
+            , CAST(ROUND(STDDEV(srlzone0402_21), 4) AS NUMERIC)  AS std_dev_srlzone0402_21
+            , CAST(ROUND(STDDEV(srlzone0402_23), 4) AS NUMERIC)  AS std_dev_srlzone0402_23
+            , CAST(ROUND(STDDEV(srlzone0402_24), 4) AS NUMERIC)  AS std_dev_srlzone0402_24
+            , CAST(ROUND(STDDEV(srlzone0402_25), 4) AS NUMERIC)  AS std_dev_srlzone0402_25
+            , CAST(ROUND(STDDEV(srlzone0402_34), 4) AS NUMERIC)  AS std_dev_srlzone0402_34
+            , CAST(ROUND(STDDEV(srlzone0402_27), 4) AS NUMERIC)  AS std_dev_srlzone0402_27
+            , CAST(ROUND(STDDEV(srlzone0402_28), 4) AS NUMERIC)  AS std_dev_srlzone0402_28
+            , CAST(ROUND(STDDEV(srlzone0402_29), 4) AS NUMERIC)  AS std_dev_srlzone0402_29
+            , CAST(ROUND(STDDEV(srlzone0402_31), 4) AS NUMERIC)  AS std_dev_srlzone0402_31
+            , CAST(ROUND(STDDEV(srlzone0402_32), 4) AS NUMERIC)  AS std_dev_srlzone0402_32
+            , CAST(ROUND(STDDEV(srlzone0402_33), 4) AS NUMERIC)  AS std_dev_srlzone0402_33
+            , CAST(ROUND(STDDEV(srlzone0402_1), 4) AS NUMERIC)   AS std_dev_srlzone0402_1
+            , CAST(ROUND(STDDEV(srlzone18_32), 4) AS NUMERIC)    AS std_dev_srlzone18_32
+            , CAST(ROUND(STDDEV(srlzone18_29), 4) AS NUMERIC)    AS std_dev_srlzone18_29
+            , CAST(ROUND(STDDEV(srlzone18_30), 4) AS NUMERIC)    AS std_dev_srlzone18_30
+            , CAST(ROUND(STDDEV(srlzone18_31), 4) AS NUMERIC)    AS std_dev_srlzone18_31
+            , CAST(ROUND(STDDEV(srlzone18_37), 4) AS NUMERIC)    AS std_dev_srlzone18_37
+            , CAST(ROUND(STDDEV(srlzone18_39), 4) AS NUMERIC)    AS std_dev_srlzone18_39
+            , CAST(ROUND(STDDEV(srlzone18_40), 4) AS NUMERIC)    AS std_dev_srlzone18_40
+            , CAST(ROUND(STDDEV(srlzone18_41), 4) AS NUMERIC)    AS std_dev_srlzone18_41
+            , CAST(ROUND(STDDEV(srlzone18_42), 4) AS NUMERIC)    AS std_dev_srlzone18_42
+            , CAST(ROUND(STDDEV(srlzone18_43), 4) AS NUMERIC)    AS std_dev_srlzone18_43
+            , CAST(ROUND(STDDEV(srlzone18_44), 4) AS NUMERIC)    AS std_dev_srlzone18_44
+            , CAST(ROUND(STDDEV(srlzone18_45), 4) AS NUMERIC)    AS std_dev_srlzone18_45
+            , CAST(ROUND(STDDEV(srlzone18_15), 4) AS NUMERIC)    AS std_dev_srlzone18_15
+            , CAST(ROUND(STDDEV(srlzone18_2), 4) AS NUMERIC)     AS std_dev_srlzone18_2
+            , CAST(ROUND(STDDEV(srlzone18_12), 4) AS NUMERIC)    AS std_dev_srlzone18_12
+            , CAST(ROUND(STDDEV(srlzone18_13), 4) AS NUMERIC)    AS std_dev_srlzone18_13
+            , CAST(ROUND(STDDEV(srlzone18_14), 4) AS NUMERIC)    AS std_dev_srlzone18_14
+            , CAST(ROUND(STDDEV(srlzone18_20), 4) AS NUMERIC)    AS std_dev_srlzone18_20
+            , CAST(ROUND(STDDEV(srlzone18_21), 4) AS NUMERIC)    AS std_dev_srlzone18_21
+            , CAST(ROUND(STDDEV(srlzone18_22), 4) AS NUMERIC)    AS std_dev_srlzone18_22
+            , CAST(ROUND(STDDEV(srlzone18_23), 4) AS NUMERIC)    AS std_dev_srlzone18_23
+            , CAST(ROUND(STDDEV(srlzone18_24), 4) AS NUMERIC)    AS std_dev_srlzone18_24
+            , CAST(ROUND(STDDEV(srlzone18_25), 4) AS NUMERIC)    AS std_dev_srlzone18_25
+            , CAST(ROUND(STDDEV(srlzone18_26), 4) AS NUMERIC)    AS std_dev_srlzone18_26
+            , CAST(ROUND(STDDEV(srlzone18_27), 4) AS NUMERIC)    AS std_dev_srlzone18_27
+            , CAST(ROUND(STDDEV(srlzone18_28), 4) AS NUMERIC)    AS std_dev_srlzone18_28
+            , CAST(ROUND(STDDEV(srlzone07_42), 4) AS NUMERIC)    AS std_dev_srlzone07_42
+            , CAST(ROUND(STDDEV(srlzone07_39), 4) AS NUMERIC)    AS std_dev_srlzone07_39
+            , CAST(ROUND(STDDEV(srlzone07_41), 4) AS NUMERIC)    AS std_dev_srlzone07_41
+            , CAST(ROUND(STDDEV(srlzone07_44), 4) AS NUMERIC)    AS std_dev_srlzone07_44
+            , CAST(ROUND(STDDEV(srlzone07_48), 4) AS NUMERIC)    AS std_dev_srlzone07_48
+            , CAST(ROUND(STDDEV(srlzone07_47), 4) AS NUMERIC)    AS std_dev_srlzone07_47
+            , CAST(ROUND(STDDEV(srlzone07_21), 4) AS NUMERIC)    AS std_dev_srlzone07_21
+            , CAST(ROUND(STDDEV(srlzone07_19), 4) AS NUMERIC)    AS std_dev_srlzone07_19
+            , CAST(ROUND(STDDEV(srlzone07_20), 4) AS NUMERIC)    AS std_dev_srlzone07_20
+            , CAST(ROUND(STDDEV(srlzone07_22), 4) AS NUMERIC)    AS std_dev_srlzone07_22
+            , CAST(ROUND(STDDEV(srlzone07_26), 4) AS NUMERIC)    AS std_dev_srlzone07_26
+            , CAST(ROUND(STDDEV(srlzone07_27), 4) AS NUMERIC)    AS std_dev_srlzone07_27
+            , CAST(ROUND(STDDEV(srlzone07_28), 4) AS NUMERIC)    AS std_dev_srlzone07_28
+            , CAST(ROUND(STDDEV(srlzone07_31), 4) AS NUMERIC)    AS std_dev_srlzone07_31
+            , CAST(ROUND(STDDEV(srlzone07_29), 4) AS NUMERIC)    AS std_dev_srlzone07_29
+            , CAST(ROUND(STDDEV(srlzone07_30), 4) AS NUMERIC)    AS std_dev_srlzone07_30
+            , CAST(ROUND(STDDEV(srlzone07_32), 4) AS NUMERIC)    AS std_dev_srlzone07_32
+            , CAST(ROUND(STDDEV(srlzone07_36), 4) AS NUMERIC)    AS std_dev_srlzone07_36
+            , CAST(ROUND(STDDEV(srlzone07_37), 4) AS NUMERIC)    AS std_dev_srlzone07_37
+            , CAST(ROUND(STDDEV(srlzone07_38), 4) AS NUMERIC)    AS std_dev_srlzone07_38
+            , CAST(ROUND(STDDEV(srlzone07_2), 4) AS NUMERIC)     AS std_dev_srlzone07_2
+            , CAST(ROUND(STDDEV(srlzone07_5), 4) AS NUMERIC)     AS std_dev_srlzone07_5
+            , CAST(ROUND(STDDEV(srlzone0801_5), 4) AS NUMERIC)   AS std_dev_srlzone0801_5
+            , CAST(ROUND(STDDEV(srlzone0801_2), 4) AS NUMERIC)   AS std_dev_srlzone0801_2
+            , CAST(ROUND(STDDEV(srlzone0801_3), 4) AS NUMERIC)   AS std_dev_srlzone0801_3
+            , CAST(ROUND(STDDEV(srlzone0801_4), 4) AS NUMERIC)   AS std_dev_srlzone0801_4
+            , CAST(ROUND(STDDEV(srlzone0801_6), 4) AS NUMERIC)   AS std_dev_srlzone0801_6
+            , CAST(ROUND(STDDEV(srlzone0801_7), 4) AS NUMERIC)   AS std_dev_srlzone0801_7
+            , CAST(ROUND(STDDEV(srlzone0801_8), 4) AS NUMERIC)   AS std_dev_srlzone0801_8
+            , CAST(ROUND(STDDEV(srlzone0801_9), 4) AS NUMERIC)   AS std_dev_srlzone0801_9
+            , CAST(ROUND(STDDEV(srlzone0801_10), 4) AS NUMERIC)  AS std_dev_srlzone0801_10
+            , CAST(ROUND(STDDEV(srlzone0801_11), 4) AS NUMERIC)  AS std_dev_srlzone0801_11
+            , CAST(ROUND(STDDEV(srlzone0801_12), 4) AS NUMERIC)  AS std_dev_srlzone0801_12
+            , CAST(ROUND(STDDEV(srlzone0801_13), 4) AS NUMERIC)  AS std_dev_srlzone0801_13
+            , CAST(ROUND(STDDEV(srlzone0801_14), 4) AS NUMERIC)  AS std_dev_srlzone0801_14
+            , CAST(ROUND(STDDEV(srlzone0801_42), 4) AS NUMERIC)  AS std_dev_srlzone0801_42
+            , CAST(ROUND(STDDEV(srlzone0801_43), 4) AS NUMERIC)  AS std_dev_srlzone0801_43
+            , CAST(ROUND(STDDEV(srlzone0801_44), 4) AS NUMERIC)  AS std_dev_srlzone0801_44
+            , CAST(ROUND(STDDEV(srlzone0801_45), 4) AS NUMERIC)  AS std_dev_srlzone0801_45
+            , CAST(ROUND(STDDEV(srlzone0801_46), 4) AS NUMERIC)  AS std_dev_srlzone0801_46
+            , CAST(ROUND(STDDEV(srlzone0801_47), 4) AS NUMERIC)  AS std_dev_srlzone0801_47
+            , CAST(ROUND(STDDEV(srlzone0801_48), 4) AS NUMERIC)  AS std_dev_srlzone0801_48
+            , CAST(ROUND(STDDEV(srlzone0801_49), 4) AS NUMERIC)  AS std_dev_srlzone0801_49
+            , CAST(ROUND(STDDEV(srlzone0801_50), 4) AS NUMERIC)  AS std_dev_srlzone0801_50
+            , CAST(ROUND(STDDEV(srlzone0801_51), 4) AS NUMERIC)  AS std_dev_srlzone0801_51
+            , CAST(ROUND(STDDEV(srlzone0801_52), 4) AS NUMERIC)  AS std_dev_srlzone0801_52
+            , CAST(ROUND(STDDEV(srlzone0801_19), 4) AS NUMERIC)  AS std_dev_srlzone0801_19
+            , CAST(ROUND(STDDEV(srlzone0801_16), 4) AS NUMERIC)  AS std_dev_srlzone0801_16
+            , CAST(ROUND(STDDEV(srlzone0801_17), 4) AS NUMERIC)  AS std_dev_srlzone0801_17
+            , CAST(ROUND(STDDEV(srlzone0801_18), 4) AS NUMERIC)  AS std_dev_srlzone0801_18
+            , CAST(ROUND(STDDEV(srlzone0801_20), 4) AS NUMERIC)  AS std_dev_srlzone0801_20
+            , CAST(ROUND(STDDEV(srlzone0801_21), 4) AS NUMERIC)  AS std_dev_srlzone0801_21
+            , CAST(ROUND(STDDEV(srlzone0801_22), 4) AS NUMERIC)  AS std_dev_srlzone0801_22
+            , CAST(ROUND(STDDEV(srlzone0801_23), 4) AS NUMERIC)  AS std_dev_srlzone0801_23
+            , CAST(ROUND(STDDEV(srlzone0801_24), 4) AS NUMERIC)  AS std_dev_srlzone0801_24
+            , CAST(ROUND(STDDEV(srlzone0801_25), 4) AS NUMERIC)  AS std_dev_srlzone0801_25
+            , CAST(ROUND(STDDEV(srlzone0801_26), 4) AS NUMERIC)  AS std_dev_srlzone0801_26
+            , CAST(ROUND(STDDEV(srlzone0801_27), 4) AS NUMERIC)  AS std_dev_srlzone0801_27
+            , CAST(ROUND(STDDEV(srlzone0801_53), 4) AS NUMERIC)  AS std_dev_srlzone0801_53
+            , CAST(ROUND(STDDEV(srlzone0801_29), 4) AS NUMERIC)  AS std_dev_srlzone0801_29
+            , CAST(ROUND(STDDEV(srlzone0801_32), 4) AS NUMERIC)  AS std_dev_srlzone0801_32
+            , CAST(ROUND(STDDEV(srlzone0801_35), 4) AS NUMERIC)  AS std_dev_srlzone0801_35
+            , CAST(ROUND(STDDEV(srlzone0801_36), 4) AS NUMERIC)  AS std_dev_srlzone0801_36
+            , CAST(ROUND(STDDEV(srlzone0801_39), 4) AS NUMERIC)  AS std_dev_srlzone0801_39
+            , CAST(ROUND(STDDEV(srlzone09_1), 4) AS NUMERIC)     AS std_dev_srlzone09_1
+            , CAST(ROUND(STDDEV(srlzone1202_2), 4) AS NUMERIC)   AS std_dev_srlzone1202_2
+            , CAST(ROUND(STDDEV(srlzone1202_1), 4) AS NUMERIC)   AS std_dev_srlzone1202_1
+            , CAST(ROUND(STDDEV(srlzone1202_4), 4) AS NUMERIC)   AS std_dev_srlzone1202_4
+            , CAST(ROUND(STDDEV(srlzone1202_5), 4) AS NUMERIC)   AS std_dev_srlzone1202_5
+            , CAST(ROUND(STDDEV(srlzone1202_6), 4) AS NUMERIC)   AS std_dev_srlzone1202_6
+            , CAST(ROUND(STDDEV(srlzone13_2), 4) AS NUMERIC)     AS std_dev_srlzone13_2
+            , CAST(ROUND(STDDEV(srlzone0803_42), 4) AS NUMERIC)  AS std_dev_srlzone0803_42
+            , CAST(ROUND(STDDEV(srlzone0803_41), 4) AS NUMERIC)  AS std_dev_srlzone0803_41
+            , CAST(ROUND(STDDEV(srlzone0803_47), 4) AS NUMERIC)  AS std_dev_srlzone0803_47
+            , CAST(ROUND(STDDEV(srlzone0803_48), 4) AS NUMERIC)  AS std_dev_srlzone0803_48
+            , CAST(ROUND(STDDEV(srlzone0803_49), 4) AS NUMERIC)  AS std_dev_srlzone0803_49
+            , CAST(ROUND(STDDEV(srlzone0803_50), 4) AS NUMERIC)  AS std_dev_srlzone0803_50
+            , CAST(ROUND(STDDEV(srlzone0803_150), 4) AS NUMERIC) AS std_dev_srlzone0803_150
+            , CAST(ROUND(STDDEV(srlzone0803_174), 4) AS NUMERIC) AS std_dev_srlzone0803_174
+            , CAST(ROUND(STDDEV(srlzone0803_185), 4) AS NUMERIC) AS std_dev_srlzone0803_185
+            , CAST(ROUND(STDDEV(srlzone0803_191), 4) AS NUMERIC) AS std_dev_srlzone0803_191
+            , CAST(ROUND(STDDEV(srlzone0803_53), 4) AS NUMERIC)  AS std_dev_srlzone0803_53
+            , CAST(ROUND(STDDEV(srlzone0803_54), 4) AS NUMERIC)  AS std_dev_srlzone0803_54
+            , CAST(ROUND(STDDEV(srlzone0803_59), 4) AS NUMERIC)  AS std_dev_srlzone0803_59
+            , CAST(ROUND(STDDEV(srlzone0803_60), 4) AS NUMERIC)  AS std_dev_srlzone0803_60
+            , CAST(ROUND(STDDEV(srlzone0803_61), 4) AS NUMERIC)  AS std_dev_srlzone0803_61
+            , CAST(ROUND(STDDEV(srlzone0803_186), 4) AS NUMERIC) AS std_dev_srlzone0803_186
+            , CAST(ROUND(STDDEV(srlzone0803_192), 4) AS NUMERIC) AS std_dev_srlzone0803_192
+            , CAST(ROUND(STDDEV(srlzone0803_151), 4) AS NUMERIC) AS std_dev_srlzone0803_151
+            , CAST(ROUND(STDDEV(srlzone0803_175), 4) AS NUMERIC) AS std_dev_srlzone0803_175
+            , CAST(ROUND(STDDEV(srlzone0803_65), 4) AS NUMERIC)  AS std_dev_srlzone0803_65
+            , CAST(ROUND(STDDEV(srlzone0803_64), 4) AS NUMERIC)  AS std_dev_srlzone0803_64
+            , CAST(ROUND(STDDEV(srlzone0803_70), 4) AS NUMERIC)  AS std_dev_srlzone0803_70
+            , CAST(ROUND(STDDEV(srlzone0803_71), 4) AS NUMERIC)  AS std_dev_srlzone0803_71
+            , CAST(ROUND(STDDEV(srlzone0803_72), 4) AS NUMERIC)  AS std_dev_srlzone0803_72
+            , CAST(ROUND(STDDEV(srlzone0803_152), 4) AS NUMERIC) AS std_dev_srlzone0803_152
+            , CAST(ROUND(STDDEV(srlzone0803_176), 4) AS NUMERIC) AS std_dev_srlzone0803_176
+            , CAST(ROUND(STDDEV(srlzone0803_187), 4) AS NUMERIC) AS std_dev_srlzone0803_187
+            , CAST(ROUND(STDDEV(srlzone0803_193), 4) AS NUMERIC) AS std_dev_srlzone0803_193
+            , CAST(ROUND(STDDEV(srlzone0803_76), 4) AS NUMERIC)  AS std_dev_srlzone0803_76
+            , CAST(ROUND(STDDEV(srlzone0803_75), 4) AS NUMERIC)  AS std_dev_srlzone0803_75
+            , CAST(ROUND(STDDEV(srlzone0803_81), 4) AS NUMERIC)  AS std_dev_srlzone0803_81
+            , CAST(ROUND(STDDEV(srlzone0803_82), 4) AS NUMERIC)  AS std_dev_srlzone0803_82
+            , CAST(ROUND(STDDEV(srlzone0803_83), 4) AS NUMERIC)  AS std_dev_srlzone0803_83
+            , CAST(ROUND(STDDEV(srlzone0803_153), 4) AS NUMERIC) AS std_dev_srlzone0803_153
+            , CAST(ROUND(STDDEV(srlzone0803_177), 4) AS NUMERIC) AS std_dev_srlzone0803_177
+            , CAST(ROUND(STDDEV(srlzone0803_188), 4) AS NUMERIC) AS std_dev_srlzone0803_188
+            , CAST(ROUND(STDDEV(srlzone0803_194), 4) AS NUMERIC) AS std_dev_srlzone0803_194
+            , CAST(ROUND(STDDEV(srlzone0803_87), 4) AS NUMERIC)  AS std_dev_srlzone0803_87
+            , CAST(ROUND(STDDEV(srlzone0803_86), 4) AS NUMERIC)  AS std_dev_srlzone0803_86
+            , CAST(ROUND(STDDEV(srlzone0803_93), 4) AS NUMERIC)  AS std_dev_srlzone0803_93
+            , CAST(ROUND(STDDEV(srlzone0803_94), 4) AS NUMERIC)  AS std_dev_srlzone0803_94
+            , CAST(ROUND(STDDEV(srlzone0803_95), 4) AS NUMERIC)  AS std_dev_srlzone0803_95
+            , CAST(ROUND(STDDEV(srlzone0803_154), 4) AS NUMERIC) AS std_dev_srlzone0803_154
+            , CAST(ROUND(STDDEV(srlzone0803_178), 4) AS NUMERIC) AS std_dev_srlzone0803_178
+            , CAST(ROUND(STDDEV(srlzone0803_189), 4) AS NUMERIC) AS std_dev_srlzone0803_189
+            , CAST(ROUND(STDDEV(srlzone0803_195), 4) AS NUMERIC) AS std_dev_srlzone0803_195
+            , CAST(ROUND(STDDEV(srlzone0803_101), 4) AS NUMERIC) AS std_dev_srlzone0803_101
+            , CAST(ROUND(STDDEV(srlzone0803_100), 4) AS NUMERIC) AS std_dev_srlzone0803_100
+            , CAST(ROUND(STDDEV(srlzone0803_107), 4) AS NUMERIC) AS std_dev_srlzone0803_107
+            , CAST(ROUND(STDDEV(srlzone0803_108), 4) AS NUMERIC) AS std_dev_srlzone0803_108
+            , CAST(ROUND(STDDEV(srlzone0803_109), 4) AS NUMERIC) AS std_dev_srlzone0803_109
+            , CAST(ROUND(STDDEV(srlzone0803_155), 4) AS NUMERIC) AS std_dev_srlzone0803_155
+            , CAST(ROUND(STDDEV(srlzone0803_179), 4) AS NUMERIC) AS std_dev_srlzone0803_179
+            , CAST(ROUND(STDDEV(srlzone0803_190), 4) AS NUMERIC) AS std_dev_srlzone0803_190
+            , CAST(ROUND(STDDEV(srlzone0803_196), 4) AS NUMERIC) AS std_dev_srlzone0803_196
+            , CAST(ROUND(STDDEV(srlzone0803_1), 4) AS NUMERIC)   AS std_dev_srlzone0803_1
+            , CAST(ROUND(STDDEV(srlzone0803_4), 4) AS NUMERIC)   AS std_dev_srlzone0803_4
+            , CAST(ROUND(STDDEV(srlzone0803_5), 4) AS NUMERIC)   AS std_dev_srlzone0803_5
+            , CAST(ROUND(STDDEV(srlzone0803_6), 4) AS NUMERIC)   AS std_dev_srlzone0803_6
+            , CAST(ROUND(STDDEV(srlzone0803_7), 4) AS NUMERIC)   AS std_dev_srlzone0803_7
+            , CAST(ROUND(STDDEV(srlzone0803_8), 4) AS NUMERIC)   AS std_dev_srlzone0803_8
+            , CAST(ROUND(STDDEV(srlzone0803_9), 4) AS NUMERIC)   AS std_dev_srlzone0803_9
+            , CAST(ROUND(STDDEV(srlzone0803_16), 4) AS NUMERIC)  AS std_dev_srlzone0803_16
+            , CAST(ROUND(STDDEV(srlzone0803_18), 4) AS NUMERIC)  AS std_dev_srlzone0803_18
+            , CAST(ROUND(STDDEV(srlzone0803_19), 4) AS NUMERIC)  AS std_dev_srlzone0803_19
+            , CAST(ROUND(STDDEV(srlzone0803_20), 4) AS NUMERIC)  AS std_dev_srlzone0803_20
+            , CAST(ROUND(STDDEV(srlzone0803_21), 4) AS NUMERIC)  AS std_dev_srlzone0803_21
+            , CAST(ROUND(STDDEV(srlzone0803_34), 4) AS NUMERIC)  AS std_dev_srlzone0803_34
+            , CAST(ROUND(STDDEV(srlzone0803_163), 4) AS NUMERIC) AS std_dev_srlzone0803_163
+            , CAST(ROUND(STDDEV(srlzone0803_164), 4) AS NUMERIC) AS std_dev_srlzone0803_164
+            , CAST(ROUND(STDDEV(srlzone0803_165), 4) AS NUMERIC) AS std_dev_srlzone0803_165
+            , CAST(ROUND(STDDEV(srlzone0803_166), 4) AS NUMERIC) AS std_dev_srlzone0803_166
+            , CAST(ROUND(STDDEV(srlzone0803_167), 4) AS NUMERIC) AS std_dev_srlzone0803_167
+            , CAST(ROUND(STDDEV(srlzone0803_169), 4) AS NUMERIC) AS std_dev_srlzone0803_169
+            , CAST(ROUND(STDDEV(srlzone0803_207), 4) AS NUMERIC) AS std_dev_srlzone0803_207
+            , CAST(ROUND(STDDEV(srlzone0803_208), 4) AS NUMERIC) AS std_dev_srlzone0803_208
+            , CAST(ROUND(STDDEV(srlzone0803_209), 4) AS NUMERIC) AS std_dev_srlzone0803_209
+            , CAST(ROUND(STDDEV(srlzone0803_210), 4) AS NUMERIC) AS std_dev_srlzone0803_210
+            , CAST(ROUND(STDDEV(srlzone0803_211), 4) AS NUMERIC) AS std_dev_srlzone0803_211
+            , CAST(ROUND(STDDEV(srlzone0803_115), 4) AS NUMERIC) AS std_dev_srlzone0803_115
+            , CAST(ROUND(STDDEV(srlzone0803_117), 4) AS NUMERIC) AS std_dev_srlzone0803_117
+            , CAST(ROUND(STDDEV(srlzone0803_133), 4) AS NUMERIC) AS std_dev_srlzone0803_133
+            , CAST(ROUND(STDDEV(srlzone10_19), 4) AS NUMERIC)    AS std_dev_srlzone10_19
+            , CAST(ROUND(STDDEV(srlzone10_20), 4) AS NUMERIC)    AS std_dev_srlzone10_20
+            , CAST(ROUND(STDDEV(srlzone10_21), 4) AS NUMERIC)    AS std_dev_srlzone10_21
+            , CAST(ROUND(STDDEV(srlzone10_23), 4) AS NUMERIC)    AS std_dev_srlzone10_23
+            , CAST(ROUND(STDDEV(srlzone10_24), 4) AS NUMERIC)    AS std_dev_srlzone10_24
+            , CAST(ROUND(STDDEV(srlzone10_25), 4) AS NUMERIC)    AS std_dev_srlzone10_25
+            , CAST(ROUND(STDDEV(srlzone10_26), 4) AS NUMERIC)    AS std_dev_srlzone10_26
+            , CAST(ROUND(STDDEV(srlzone10_27), 4) AS NUMERIC)    AS std_dev_srlzone10_27
+            , CAST(ROUND(STDDEV(srlzone10_29), 4) AS NUMERIC)    AS std_dev_srlzone10_29
+            , CAST(ROUND(STDDEV(srlzone10_30), 4) AS NUMERIC)    AS std_dev_srlzone10_30
+            , CAST(ROUND(STDDEV(srlzone10_31), 4) AS NUMERIC)    AS std_dev_srlzone10_31
+            , CAST(ROUND(STDDEV(srlzone10_32), 4) AS NUMERIC)    AS std_dev_srlzone10_32
+            , CAST(ROUND(STDDEV(srlzone10_33), 4) AS NUMERIC)    AS std_dev_srlzone10_33
+            , CAST(ROUND(STDDEV(srlzone10_18), 4) AS NUMERIC)    AS std_dev_srlzone10_18
+            , CAST(ROUND(STDDEV(srlzone10_1), 4) AS NUMERIC)     AS std_dev_srlzone10_1
+            , CAST(ROUND(STDDEV(srlzone10_11), 4) AS NUMERIC)    AS std_dev_srlzone10_11
+            , CAST(ROUND(STDDEV(srlzone10_12), 4) AS NUMERIC)    AS std_dev_srlzone10_12
+            , CAST(ROUND(STDDEV(srlzone10_13), 4) AS NUMERIC)    AS std_dev_srlzone10_13
+            , CAST(ROUND(STDDEV(srlzone10_14), 4) AS NUMERIC)    AS std_dev_srlzone10_14
+            , CAST(ROUND(STDDEV(srlzone10_16), 4) AS NUMERIC)    AS std_dev_srlzone10_16
+            , CAST(ROUND(STDDEV(srlzone10_17), 4) AS NUMERIC)    AS std_dev_srlzone10_17
+            , CAST(ROUND(STDDEV(srlzone10_34), 4) AS NUMERIC)    AS std_dev_srlzone10_34
+            , CAST(ROUND(STDDEV(srlzone10_37), 4) AS NUMERIC)    AS std_dev_srlzone10_37
+            , CAST(ROUND(STDDEV(srlzone10_38), 4) AS NUMERIC)    AS std_dev_srlzone10_38
+            , CAST(ROUND(STDDEV(srlzone10_8), 4) AS NUMERIC)     AS std_dev_srlzone10_8
+            , CAST(ROUND(STDDEV(srlzone10_9), 4) AS NUMERIC)     AS std_dev_srlzone10_9
+            , CAST(ROUND(STDDEV(srlzone11_7), 4) AS NUMERIC)     AS std_dev_srlzone11_7
+            , CAST(ROUND(STDDEV(srlzone11_8), 4) AS NUMERIC)     AS std_dev_srlzone11_8
+            , CAST(ROUND(STDDEV(srlzone11_10), 4) AS NUMERIC)    AS std_dev_srlzone11_10
+            , CAST(ROUND(STDDEV(srlzone11_11), 4) AS NUMERIC)    AS std_dev_srlzone11_11
+            , CAST(ROUND(STDDEV(srlzone11_12), 4) AS NUMERIC)    AS std_dev_srlzone11_12
+            , CAST(ROUND(STDDEV(srlzone11_13), 4) AS NUMERIC)    AS std_dev_srlzone11_13
+            , CAST(ROUND(STDDEV(srlzone11_14), 4) AS NUMERIC)    AS std_dev_srlzone11_14
+            , CAST(ROUND(STDDEV(srlzone11_15), 4) AS NUMERIC)    AS std_dev_srlzone11_15
+            , CAST(ROUND(STDDEV(srlzone11_16), 4) AS NUMERIC)    AS std_dev_srlzone11_16
+            , CAST(ROUND(STDDEV(srlzone11_17), 4) AS NUMERIC)    AS std_dev_srlzone11_17
+            , CAST(ROUND(STDDEV(srlzone11_21), 4) AS NUMERIC)    AS std_dev_srlzone11_21
+            , CAST(ROUND(STDDEV(srlzone11_22), 4) AS NUMERIC)    AS std_dev_srlzone11_22
+            , CAST(ROUND(STDDEV(srlzone11_23), 4) AS NUMERIC)    AS std_dev_srlzone11_23
+            , CAST(ROUND(STDDEV(srlzone11_24), 4) AS NUMERIC)    AS std_dev_srlzone11_24
+            , CAST(ROUND(STDDEV(srlzone11_25), 4) AS NUMERIC)    AS std_dev_srlzone11_25
+            , CAST(ROUND(STDDEV(srlzone11_26), 4) AS NUMERIC)    AS std_dev_srlzone11_26
+            , CAST(ROUND(STDDEV(srlzone11_27), 4) AS NUMERIC)    AS std_dev_srlzone11_27
+            , CAST(ROUND(STDDEV(srlzone11_28), 4) AS NUMERIC)    AS std_dev_srlzone11_28
+            , CAST(ROUND(STDDEV(srlzone11_34), 4) AS NUMERIC)    AS std_dev_srlzone11_34
+            , CAST(ROUND(STDDEV(srlzone11_35), 4) AS NUMERIC)    AS std_dev_srlzone11_35
+            , CAST(ROUND(STDDEV(srlzone11_36), 4) AS NUMERIC)    AS std_dev_srlzone11_36
+       FROM (
+          SELECT CASE WHEN zone_nm = '소형압연 Zone4-ST1_4' THEN entry_dtm END                                                                                                                                                                                      AS rm_entry_dtm
+                    , heat_no
+                    , str_no
+                    , ser_no
+                    , lot_no
+                    , lot_no_seq_no
+                    -- STAND1
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_16 END                                      AS srlzone0401_16
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_9 END                                       AS srlzone0401_9
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_10 END                                      AS srlzone0401_10
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_11 END                                      AS srlzone0401_11
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_13 END                                      AS srlzone0401_13
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_14 END                                      AS srlzone0401_14
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_16) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_15 END                                      AS srlzone0401_15
+                    -- STAND2
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_24 END                                      AS srlzone0401_24
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_17 END                                      AS srlzone0401_17
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_18 END                                      AS srlzone0401_18
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_19 END                                      AS srlzone0401_19
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_21 END                                      AS srlzone0401_21
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_22 END                                      AS srlzone0401_22
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_24) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_23 END                                      AS srlzone0401_23
+                    -- STAND3
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_32 END                                      AS srlzone0401_32
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_25 END                                      AS srlzone0401_25
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_26 END                                      AS srlzone0401_26
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_27 END                                      AS srlzone0401_27
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_29 END                                      AS srlzone0401_29
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_30 END                                      AS srlzone0401_30
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_31 END                                      AS srlzone0401_31
+                    -- STAND4
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_40 END                                      AS srlzone0401_40
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_33 END                                      AS srlzone0401_33
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_34 END                                      AS srlzone0401_34
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_35 END                                      AS srlzone0401_35
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_37 END                                      AS srlzone0401_37
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_38 END                                      AS srlzone0401_38
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0401_40) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0401_39 END                                      AS srlzone0401_39
+                    -- TEMPURATURE
+                    , CASE WHEN srlzone0401_4 > 600 THEN srlzone0401_4 END                                                                                                                                                                                                                                                                                                 AS srlzone0401_4
+                    -- COOLING FLOW
+                    , CASE WHEN srlzone0401_7 BETWEEN AVG(srlzone0401_7) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0401_7) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0401_7) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0401_7) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0401_7 END             AS srlzone0401_7
+                    , CASE WHEN srlzone0401_8 BETWEEN AVG(srlzone0401_8) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0401_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0401_8) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0401_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0401_8 END             AS srlzone0401_8
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_10 END                                      AS srlzone0402_10
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_3 END                                       AS srlzone0402_3
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_4 END                                       AS srlzone0402_4
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_5 END                                       AS srlzone0402_5
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_7 END                                       AS srlzone0402_7
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_8 END                                       AS srlzone0402_8
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_10) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_9 END                                       AS srlzone0402_9
+                    -- STAND6
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_18 END                                      AS srlzone0402_18
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_11 END                                      AS srlzone0402_11
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_12 END                                      AS srlzone0402_12
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_13 END                                      AS srlzone0402_13
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_15 END                                      AS srlzone0402_15
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_16 END                                      AS srlzone0402_16
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_18) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_17 END                                      AS srlzone0402_17
+                    -- STAND7
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_26 END                                      AS srlzone0402_26
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_19 END                                      AS srlzone0402_19
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_20 END                                      AS srlzone0402_20
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_21 END                                      AS srlzone0402_21
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_23 END                                      AS srlzone0402_23
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_24 END                                      AS srlzone0402_24
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_25 END                                      AS srlzone0402_25
+                    -- STAND8
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_34 END                                      AS srlzone0402_34
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_27 END                                      AS srlzone0402_27
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_28 END                                      AS srlzone0402_28
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_29 END                                      AS srlzone0402_29
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_31 END                                      AS srlzone0402_31
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_32 END                                      AS srlzone0402_32
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0402_34) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0402_33 END                                      AS srlzone0402_33
+                    -- TEMPURATURE
+                    , CASE WHEN srlzone0402_1 > 400 THEN srlzone0402_1 END                                                                                                                                                                                                                                                                                                 AS srlzone0402_1
+                    -- STAND9
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_32 END                                            AS srlzone18_32
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_29 END                                            AS srlzone18_29
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_30 END                                            AS srlzone18_30
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_31 END                                            AS srlzone18_31
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_37 END                                            AS srlzone18_37
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_39 END                                            AS srlzone18_39
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_40 END                                            AS srlzone18_40
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_41 END                                            AS srlzone18_41
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_42 END                                            AS srlzone18_42
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_43 END                                            AS srlzone18_43
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_44 END                                            AS srlzone18_44
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_32) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_45 END                                            AS srlzone18_45
+                    -- STAND10
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_15 END                                            AS srlzone18_15
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_2 END                                             AS srlzone18_2
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_12 END                                            AS srlzone18_12
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_13 END                                            AS srlzone18_13
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_14 END                                            AS srlzone18_14
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_20 END                                            AS srlzone18_20
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_21 END                                            AS srlzone18_21
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_22 END                                            AS srlzone18_22
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_23 END                                            AS srlzone18_23
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_24 END                                            AS srlzone18_24
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone18_15) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone18_25 END                                            AS srlzone18_25
+                    -- FINAL SPEED
+                    , CASE WHEN srlzone18_26 BETWEEN AVG(srlzone18_26) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone18_26) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone18_26) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone18_26) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone18_26 END                   AS srlzone18_26
+                    -- COOLING FLOW
+                    , CASE WHEN srlzone18_27 BETWEEN AVG(srlzone18_27) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone18_27) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone18_27) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone18_27) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone18_27 END                   AS srlzone18_27
+                    , CASE WHEN srlzone18_28 BETWEEN AVG(srlzone18_28) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone18_28) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone18_28) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone18_28) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone18_28 END                   AS srlzone18_28
+                    -- STAND 9-13
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_42 END                                            AS srlzone07_42
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_39 END                                            AS srlzone07_39
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_41 END                                            AS srlzone07_41
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_44 END                                            AS srlzone07_44
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_48 END                                            AS srlzone07_48
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_47 END                                            AS srlzone07_47
+                    -- STAND14
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_21 END                                            AS srlzone07_21
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_19 END                                            AS srlzone07_19
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_20 END                                            AS srlzone07_20
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_22 END                                            AS srlzone07_22
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_26 END                                            AS srlzone07_26
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_27 END                                            AS srlzone07_27
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_21) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_28 END                                            AS srlzone07_28
+                    -- STAND15
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_31 END                                            AS srlzone07_31
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_29 END                                            AS srlzone07_29
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_30 END                                            AS srlzone07_30
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_32 END                                            AS srlzone07_32
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_36 END                                            AS srlzone07_36
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_37 END                                            AS srlzone07_37
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone07_31) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone07_38 END                                            AS srlzone07_38
+                    -- TEMPERATURE
+                    , CASE WHEN srlzone07_2 > 600 THEN srlzone07_2 END                                                                                                                                                                           AS srlzone07_2
+                    -- SPEED
+                    , CASE WHEN srlzone07_5 BETWEEN AVG(srlzone07_5) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone07_5) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone07_5) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone07_5) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone07_5 END                         AS srlzone07_5
+                    --STAND18
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_5 END                                         AS srlzone0801_5
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_2 END                                         AS srlzone0801_2
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_3 END                                         AS srlzone0801_3
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_4 END                                         AS srlzone0801_4
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_6 END                                         AS srlzone0801_6
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_7 END                                         AS srlzone0801_7
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_8 END                                         AS srlzone0801_8
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_9 END                                         AS srlzone0801_9
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_10 END                                        AS srlzone0801_10
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_11 END                                        AS srlzone0801_11
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_12 END                                        AS srlzone0801_12
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_13 END                                        AS srlzone0801_13
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_14 END                                        AS srlzone0801_14
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_42 END                                        AS srlzone0801_42
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_43 END                                        AS srlzone0801_43
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_44 END                                        AS srlzone0801_44
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_45 END                                        AS srlzone0801_45
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_46 END                                        AS srlzone0801_46
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_47 END                                        AS srlzone0801_47
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_48 END                                        AS srlzone0801_48
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_49 END                                        AS srlzone0801_49
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_50 END                                        AS srlzone0801_50
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_51 END                                        AS srlzone0801_51
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_5) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_52 END                                        AS srlzone0801_52
+                    -- STAND19
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_19 END                                      AS srlzone0801_19
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_16 END                                      AS srlzone0801_16
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_17 END                                      AS srlzone0801_17
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_18 END                                      AS srlzone0801_18
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_20 END                                      AS srlzone0801_20
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_21 END                                      AS srlzone0801_21
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_22 END                                      AS srlzone0801_22
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_23 END                                      AS srlzone0801_23
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_24 END                                      AS srlzone0801_24
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_25 END                                      AS srlzone0801_25
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_26 END                                      AS srlzone0801_26
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_27 END                                      AS srlzone0801_27
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0801_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0801_53 END                                      AS srlzone0801_53
+                    -- LOOP
+                    , CASE WHEN srlzone0801_29 BETWEEN AVG(srlzone0801_29) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0801_29) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0801_29) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0801_29) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0801_29 END       AS srlzone0801_29
+                    , CASE WHEN srlzone0801_32 BETWEEN AVG(srlzone0801_32) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0801_32) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0801_32) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0801_32) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0801_32 END       AS srlzone0801_32
+                    , CASE WHEN srlzone0801_35 BETWEEN AVG(srlzone0801_35) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0801_35) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0801_35) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0801_35) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0801_35 END       AS srlzone0801_35
+                    , CASE WHEN srlzone0801_36 BETWEEN AVG(srlzone0801_36) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0801_36) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0801_36) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0801_36) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0801_36 END       AS srlzone0801_36
+                    , CASE WHEN srlzone0801_39 BETWEEN AVG(srlzone0801_39) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0801_39) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0801_39) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0801_39) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0801_39 END       AS srlzone0801_39
+                    -- COMBINED SHEAR
+                    , CASE WHEN srlzone09_1 BETWEEN AVG(srlzone09_1) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone09_1) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone09_1) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone09_1) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone09_1 END                         AS srlzone09_1
+                    -- RSM
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone1202_2 END                                         AS srlzone1202_2
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone1202_1 END                                         AS srlzone1202_1
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone1202_4 END                                         AS srlzone1202_4
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone1202_5 END                                         AS srlzone1202_5
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone1202_2) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone1202_6 END                                         AS srlzone1202_6
+                    -- LAYING HEAD
+                    , CASE WHEN srlzone13_2 BETWEEN AVG(srlzone13_2) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone13_2) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone13_2) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone13_2) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone13_2 END                         AS srlzone13_2
+                    -- RSB STAND1
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_42 END                                      AS srlzone0803_42
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_41 END                                      AS srlzone0803_41
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_47 END                                      AS srlzone0803_47
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_48 END                                      AS srlzone0803_48
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_49 END                                      AS srlzone0803_49
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_50 END                                      AS srlzone0803_50
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_150 END                                     AS srlzone0803_150
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_174 END                                     AS srlzone0803_174
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_185 END                                     AS srlzone0803_185
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_42) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_191 END                                     AS srlzone0803_191
+                    -- RSB STAND2
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_53 END                                      AS srlzone0803_53
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_54 END                                      AS srlzone0803_54
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_59 END                                      AS srlzone0803_59
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_60 END                                      AS srlzone0803_60
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_61 END                                      AS srlzone0803_61
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_186 END                                     AS srlzone0803_186
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_192 END                                     AS srlzone0803_192
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_151 END                                     AS srlzone0803_151
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_53) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_175 END                                     AS srlzone0803_175
+                    -- RSB STAND3
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_65 END                                      AS srlzone0803_65
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_64 END                                      AS srlzone0803_64
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_70 END                                      AS srlzone0803_70
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_71 END                                      AS srlzone0803_71
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_72 END                                      AS srlzone0803_72
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_152 END                                     AS srlzone0803_152
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_176 END                                     AS srlzone0803_176
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_187 END                                     AS srlzone0803_187
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_65) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_193 END                                     AS srlzone0803_193
+                    -- RSB STAND4
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_76 END                                      AS srlzone0803_76
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_75 END                                      AS srlzone0803_75
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_81 END                                      AS srlzone0803_81
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_82 END                                      AS srlzone0803_82
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_83 END                                      AS srlzone0803_83
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_153 END                                     AS srlzone0803_153
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_177 END                                     AS srlzone0803_177
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_188 END                                     AS srlzone0803_188
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_76) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_194 END                                     AS srlzone0803_194
+                    -- RSB STAND5
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_87 END                                      AS srlzone0803_87
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_86 END                                      AS srlzone0803_86
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_93 END                                      AS srlzone0803_93
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_94 END                                      AS srlzone0803_94
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_95 END                                      AS srlzone0803_95
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_154 END                                     AS srlzone0803_154
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_178 END                                     AS srlzone0803_178
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_189 END                                     AS srlzone0803_189
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_87) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_195 END                                     AS srlzone0803_195
+                    -- RSB STAND6
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_101 END                                   AS srlzone0803_101
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_100 END                                   AS srlzone0803_100
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_107 END                                   AS srlzone0803_107
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_108 END                                   AS srlzone0803_108
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_109 END                                   AS srlzone0803_109
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_155 END                                   AS srlzone0803_155
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_179 END                                   AS srlzone0803_179
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_190 END                                   AS srlzone0803_190
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone0803_101) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone0803_196 END                                   AS srlzone0803_196
+                    -- RSB ETC
+                    , CASE WHEN srlzone0803_1 BETWEEN AVG(srlzone0803_1) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_1) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_1) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_1) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_1 END             AS srlzone0803_1
+                    , CASE WHEN srlzone0803_4 BETWEEN AVG(srlzone0803_4) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_4) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_4) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_4) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_4 END             AS srlzone0803_4
+                    , CASE WHEN srlzone0803_5 BETWEEN AVG(srlzone0803_5) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_5) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_5) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_5) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_5 END             AS srlzone0803_5
+                    , CASE WHEN srlzone0803_6 BETWEEN AVG(srlzone0803_6) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_6) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_6) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_6) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_6 END             AS srlzone0803_6
+                    , CASE WHEN srlzone0803_7 BETWEEN AVG(srlzone0803_7) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_7) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_7) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_7) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_7 END             AS srlzone0803_7
+                    , CASE WHEN srlzone0803_8 BETWEEN AVG(srlzone0803_8) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_8) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_8 END             AS srlzone0803_8
+                    , CASE WHEN srlzone0803_9 BETWEEN AVG(srlzone0803_9) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_9) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_9) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_9) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_9 END             AS srlzone0803_9
+                    , CASE WHEN srlzone0803_16 BETWEEN AVG(srlzone0803_16) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_16) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_16) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_16) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_16 END       AS srlzone0803_16
+                    , CASE WHEN srlzone0803_18 BETWEEN AVG(srlzone0803_18) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_18) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_18) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_18) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_18 END       AS srlzone0803_18
+                    , CASE WHEN srlzone0803_19 BETWEEN AVG(srlzone0803_19) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_19) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_19) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_19) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_19 END       AS srlzone0803_19
+                    , CASE WHEN srlzone0803_20 BETWEEN AVG(srlzone0803_20) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_20) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_20) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_20) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_20 END       AS srlzone0803_20
+                    , CASE WHEN srlzone0803_21 BETWEEN AVG(srlzone0803_21) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_21) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_21) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_21) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_21 END       AS srlzone0803_21
+                    , CASE WHEN srlzone0803_34 BETWEEN AVG(srlzone0803_34) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_34) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_34) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_34) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_34 END       AS srlzone0803_34
+                    , CASE WHEN srlzone0803_163 BETWEEN AVG(srlzone0803_163) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_163) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_163) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_163) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_163 END AS srlzone0803_163
+                    , CASE WHEN srlzone0803_164 BETWEEN AVG(srlzone0803_164) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_164) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_164) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_164) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_164 END AS srlzone0803_164
+                    , CASE WHEN srlzone0803_165 BETWEEN AVG(srlzone0803_165) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_165) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_165) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_165) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_165 END AS srlzone0803_165
+                    , CASE WHEN srlzone0803_166 BETWEEN AVG(srlzone0803_166) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_166) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_166) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_166) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_166 END AS srlzone0803_166
+                    , CASE WHEN srlzone0803_167 BETWEEN AVG(srlzone0803_167) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_167) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_167) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_167) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_167 END AS srlzone0803_167
+                    , CASE WHEN srlzone0803_169 BETWEEN AVG(srlzone0803_169) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_169) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_169) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_169) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_169 END AS srlzone0803_169
+                    , CASE WHEN srlzone0803_207 BETWEEN AVG(srlzone0803_207) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_207) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_207) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_207) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_207 END AS srlzone0803_207
+                    , CASE WHEN srlzone0803_208 BETWEEN AVG(srlzone0803_208) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_208) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_208) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_208) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_208 END AS srlzone0803_208
+                    , CASE WHEN srlzone0803_209 BETWEEN AVG(srlzone0803_209) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_209) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_209) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_209) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_209 END AS srlzone0803_209
+                    , CASE WHEN srlzone0803_210 BETWEEN AVG(srlzone0803_210) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_210) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_210) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_210) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_210 END AS srlzone0803_210
+                    , CASE WHEN srlzone0803_211 BETWEEN AVG(srlzone0803_211) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_211) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_211) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_211) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_211 END AS srlzone0803_211
+                    , CASE WHEN srlzone0803_115 BETWEEN AVG(srlzone0803_115) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_115) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_115) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_115) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_115 END AS srlzone0803_115
+                    , CASE WHEN srlzone0803_117 BETWEEN AVG(srlzone0803_117) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_117) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_117) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_117) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_117 END AS srlzone0803_117
+                    , CASE WHEN srlzone0803_133 BETWEEN AVG(srlzone0803_133) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_133) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_133) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_133) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_133 END AS srlzone0803_133
+--                     , CASE WHEN srlzone0803_134 BETWEEN AVG(srlzone0803_134) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_134) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_134) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_134) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_134 END AS srlzone0803_134
+--                     , CASE WHEN srlzone0803_135 BETWEEN AVG(srlzone0803_135) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone0803_135) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone0803_135) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone0803_135) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone0803_135 END AS srlzone0803_135
+                    -- STAND29
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_19 END                                            AS srlzone10_19
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_20 END                                            AS srlzone10_20
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_21 END                                            AS srlzone10_21
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_23 END                                            AS srlzone10_23
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_24 END                                            AS srlzone10_24
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_19) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_25 END                                            AS srlzone10_25
+                    -- STAND30
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_26 END                                            AS srlzone10_26
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_27 END                                            AS srlzone10_27
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_29 END                                            AS srlzone10_29
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_30 END                                            AS srlzone10_30
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_31 END                                            AS srlzone10_31
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_32 END                                            AS srlzone10_32
+                    , CASE WHEN sec.stats_sec_dtm BETWEEN MIN(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) AND MAX(CASE WHEN ABS(srlzone10_26) >= p_torque_std THEN sec.stats_sec_dtm END) OVER (PARTITION BY lot_no, lot_no_seq_no) THEN srlzone10_33 END                                            AS srlzone10_33
+                    -- PREFINISHING COOL WATER
+                    , CASE WHEN srlzone10_18 BETWEEN AVG(srlzone10_18) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_18) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_18) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_18) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_18 END                   AS srlzone10_18
+                    -- PREFINISHING LOOP
+                    , CASE WHEN srlzone10_1 BETWEEN AVG(srlzone10_1) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_1) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_1) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_1) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_1 END                         AS srlzone10_1
+                    , CASE WHEN srlzone10_11 BETWEEN AVG(srlzone10_11) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_11) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_11) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_11) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_11 END                   AS srlzone10_11
+                    , CASE WHEN srlzone10_12 BETWEEN AVG(srlzone10_12) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_12) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_12) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_12) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_12 END                   AS srlzone10_12
+                    , CASE WHEN srlzone10_13 BETWEEN AVG(srlzone10_13) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_13) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_13) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_13) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_13 END                   AS srlzone10_13
+                    , CASE WHEN srlzone10_14 BETWEEN AVG(srlzone10_14) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_14) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_14) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_14) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_14 END                   AS srlzone10_14
+                    , CASE WHEN srlzone10_16 BETWEEN AVG(srlzone10_16) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_16) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_16) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_16) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_16 END                   AS srlzone10_16
+                    , CASE WHEN srlzone10_17 BETWEEN AVG(srlzone10_17) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_17) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_17) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_17) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_17 END                   AS srlzone10_17
+                    , CASE WHEN srlzone10_34 BETWEEN AVG(srlzone10_34) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_34) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_34) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_34) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_34 END                   AS srlzone10_34
+                    , CASE WHEN srlzone10_37 BETWEEN AVG(srlzone10_37) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_37) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_37) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_37) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_37 END                   AS srlzone10_37
+                    , CASE WHEN srlzone10_38 BETWEEN AVG(srlzone10_38) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_38) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_38) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_38) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_38 END                   AS srlzone10_38
+                    , CASE WHEN srlzone10_8 BETWEEN AVG(srlzone10_8) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_8) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_8 END                         AS srlzone10_8
+                    , CASE WHEN srlzone10_9 BETWEEN AVG(srlzone10_9) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone10_9) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone10_9) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone10_9) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone10_9 END                         AS srlzone10_9
+                    -- NTM
+                    , CASE WHEN srlzone11_7 BETWEEN AVG(srlzone11_7) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_7) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_7) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_7) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_7 END                         AS srlzone11_7
+                    , CASE WHEN srlzone11_8 BETWEEN AVG(srlzone11_8) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_8) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_8) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_8 END                         AS srlzone11_8
+                    , CASE WHEN srlzone11_10 BETWEEN AVG(srlzone11_10) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_10) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_10) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_10) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_10 END                   AS srlzone11_10
+                    , CASE WHEN srlzone11_11 BETWEEN AVG(srlzone11_11) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_11) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_11) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_11) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_11 END                   AS srlzone11_11
+                    , CASE WHEN srlzone11_12 BETWEEN AVG(srlzone11_12) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_12) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_12) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_12) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_12 END                   AS srlzone11_12
+                    , CASE WHEN srlzone11_13 BETWEEN AVG(srlzone11_13) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_13) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_13) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_13) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_13 END                   AS srlzone11_13
+                    , CASE WHEN srlzone11_14 BETWEEN AVG(srlzone11_14) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_14) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_14) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_14) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_14 END                   AS srlzone11_14
+                    , CASE WHEN srlzone11_15 BETWEEN AVG(srlzone11_15) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_15) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_15) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_15) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_15 END                   AS srlzone11_15
+                    , CASE WHEN srlzone11_16 BETWEEN AVG(srlzone11_16) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_16) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_16) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_16) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_16 END                   AS srlzone11_16
+                    , CASE WHEN srlzone11_17 BETWEEN AVG(srlzone11_17) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_17) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_17) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_17) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_17 END                   AS srlzone11_17
+                    , CASE WHEN srlzone11_21 BETWEEN AVG(srlzone11_21) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_21) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_21) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_21) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_21 END                   AS srlzone11_21
+                    , CASE WHEN srlzone11_22 BETWEEN AVG(srlzone11_22) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_22) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_22) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_22) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_22 END                   AS srlzone11_22
+                    , CASE WHEN srlzone11_23 BETWEEN AVG(srlzone11_23) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_23) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_23) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_23) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_23 END                   AS srlzone11_23
+                    , CASE WHEN srlzone11_24 BETWEEN AVG(srlzone11_24) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_24) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_24) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_24) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_24 END                   AS srlzone11_24
+                    , CASE WHEN srlzone11_25 BETWEEN AVG(srlzone11_25) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_25) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_25) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_25) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_25 END                   AS srlzone11_25
+                    , CASE WHEN srlzone11_26 BETWEEN AVG(srlzone11_26) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_26) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_26) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_26) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_26 END                   AS srlzone11_26
+                    , CASE WHEN srlzone11_27 BETWEEN AVG(srlzone11_27) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_27) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_27) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_27) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_27 END                   AS srlzone11_27
+                    , CASE WHEN srlzone11_28 BETWEEN AVG(srlzone11_28) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_28) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_28) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_28) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_28 END                   AS srlzone11_28
+                    , CASE WHEN srlzone11_34 BETWEEN AVG(srlzone11_34) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_34) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_34) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_34) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_34 END                   AS srlzone11_34
+                    , CASE WHEN srlzone11_35 BETWEEN AVG(srlzone11_35) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_35) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_35) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_35) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_35 END                   AS srlzone11_35
+                    , CASE WHEN srlzone11_36 BETWEEN AVG(srlzone11_36) OVER (PARTITION BY lot_no, lot_no_seq_no) - (1.5 * STDDEV(srlzone11_36) OVER (PARTITION BY lot_no, lot_no_seq_no)) AND AVG(srlzone11_36) OVER (PARTITION BY lot_no, lot_no_seq_no) + (1.5 * STDDEV(srlzone11_36) OVER (PARTITION BY lot_no, lot_no_seq_no)) THEN srlzone11_36 END                   AS srlzone11_36
+                 FROM trk
+                     INNER JOIN sec
+                     ON sec.stats_sec_dtm BETWEEN trk.entry_dtm AND trk.exit_dtm
+                     LEFT OUTER JOIN z0401
+                     ON sec.stats_sec_dtm = z0401.stats_sec_dtm AND trk.zone_cd = z0401.zone_cd
+                     LEFT OUTER JOIN z0402
+                     ON sec.stats_sec_dtm = z0402.stats_sec_dtm AND trk.zone_cd = z0402.zone_cd
+                     LEFT OUTER JOIN z18
+                     ON sec.stats_sec_dtm = z18.stats_sec_dtm AND trk.zone_cd = z18.zone_cd
+                     LEFT OUTER JOIN z07
+                     ON sec.stats_sec_dtm = z07.stats_sec_dtm AND trk.zone_cd = z07.zone_cd
+                     LEFT OUTER JOIN z0801
+                     ON sec.stats_sec_dtm = z0801.stats_sec_dtm AND trk.zone_cd = z0801.zone_cd
+                     LEFT OUTER JOIN z0803
+                     ON sec.stats_sec_dtm = z0803.stats_sec_dtm AND trk.zone_cd = z0803.zone_cd
+                     LEFT OUTER JOIN z09
+                     ON sec.stats_sec_dtm = z09.stats_sec_dtm AND trk.zone_cd = z09.zone_cd
+                     LEFT OUTER JOIN z10
+                     ON sec.stats_sec_dtm = z10.stats_sec_dtm AND trk.zone_cd = z10.zone_cd
+                     LEFT OUTER JOIN z11
+                     ON sec.stats_sec_dtm = z11.stats_sec_dtm AND trk.zone_cd = z11.zone_cd
+                     LEFT OUTER JOIN z1202
+                     ON sec.stats_sec_dtm = z1202.stats_sec_dtm AND trk.zone_cd = z1202.zone_cd
+                     LEFT OUTER JOIN z13
+                     ON sec.stats_sec_dtm = z13.stats_sec_dtm AND trk.zone_cd = z13.zone_cd
+              ) AS result
+        GROUP BY heat_no, str_no, ser_no, lot_no, lot_no_seq_no
+        );
+
+EXCEPTION
+    WHEN ERROR THEN
+    SELECT @@error.message;
+
+END
