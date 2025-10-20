@@ -14,7 +14,7 @@ BEGIN
         SET p_datetime = DATETIME(p_date);
     END IF;
 
-    INSERT INTO comm_analy.sts_analy_srl_mid_match_avg_stdev_st( rm_work_dte, rm_entry_dtm, lot_no, serial_no, heat_no, strnd_no, strnd_seq
+    INSERT INTO comm_analy.sts_analy_srl_mid_match_avg_std_dev_st( rm_work_dte, rm_entry_dtm, lot_no, serial_no, heat_no, strnd_no, strnd_seq
                                                          , avg_srlzone0401_16, avg_srlzone0401_9, avg_srlzone0401_10, avg_srlzone0401_11, avg_srlzone0401_13, avg_srlzone0401_14, avg_srlzone0401_15, avg_srlzone0401_24, avg_srlzone0401_17, avg_srlzone0401_18, avg_srlzone0401_19, avg_srlzone0401_21, avg_srlzone0401_22, avg_srlzone0401_23, avg_srlzone0401_32, avg_srlzone0401_25, avg_srlzone0401_26, avg_srlzone0401_27, avg_srlzone0401_29, avg_srlzone0401_30, avg_srlzone0401_31, avg_srlzone0401_40, avg_srlzone0401_33, avg_srlzone0401_34, avg_srlzone0401_35, avg_srlzone0401_37, avg_srlzone0401_38, avg_srlzone0401_39, avg_srlzone0401_4, avg_srlzone0401_7, avg_srlzone0401_8
                                                          , avg_srlzone0402_10, avg_srlzone0402_3, avg_srlzone0402_4, avg_srlzone0402_5, avg_srlzone0402_7, avg_srlzone0402_8, avg_srlzone0402_9, avg_srlzone0402_18, avg_srlzone0402_11, avg_srlzone0402_12, avg_srlzone0402_13, avg_srlzone0402_15, avg_srlzone0402_16, avg_srlzone0402_17, avg_srlzone0402_26, avg_srlzone0402_19, avg_srlzone0402_20, avg_srlzone0402_21, avg_srlzone0402_23, avg_srlzone0402_24, avg_srlzone0402_25, avg_srlzone0402_34, avg_srlzone0402_27, avg_srlzone0402_28, avg_srlzone0402_29, avg_srlzone0402_31, avg_srlzone0402_32, avg_srlzone0402_33, avg_srlzone0402_1
                                                          , avg_srlzone18_32, avg_srlzone18_29, avg_srlzone18_30, avg_srlzone18_31, avg_srlzone18_37, avg_srlzone18_39, avg_srlzone18_40, avg_srlzone18_41, avg_srlzone18_42, avg_srlzone18_43, avg_srlzone18_44, avg_srlzone18_45, avg_srlzone18_15, avg_srlzone18_2, avg_srlzone18_12, avg_srlzone18_13, avg_srlzone18_14, avg_srlzone18_20, avg_srlzone18_21, avg_srlzone18_22, avg_srlzone18_23, avg_srlzone18_24, avg_srlzone18_25, avg_srlzone18_26, avg_srlzone18_27, avg_srlzone18_28
@@ -38,7 +38,7 @@ BEGIN
                      WHERE 
                         trktime >= DATETIME_SUB(p_datetime, INTERVAL 2 MONTH) AND 
                         trktime < DATETIME_ADD(p_datetime, INTERVAL 1 DAY) AND 
-                        <!-- trktime BETWEEN DATETIME("2023-01-21 12:37:00") AND DATETIME("2023-01-21 14:07:20") and -->
+                        -- trktime BETWEEN DATETIME("2023-01-21 12:37:00") AND DATETIME("2023-01-21 14:07:20") and 
                         company_steel_grade_name in ('316LDS1', 'STS410S5','STS304SX','STS303S1','316LDSZ')
                    )
             , cp3 AS (SELECT DISTINCT lot_no
