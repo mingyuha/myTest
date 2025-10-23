@@ -1,3 +1,4 @@
+CREATE OR REPLACE PROCEDURE `dataforge-seahcss.comm_analy.pc_sts_analy_sm2_mid_match_avg_std_dev_st`(p_date STRING)
 BEGIN
     -- 2025-10-14 소형압연 아이디 매칭 데이터 평균,표준편차 작업
     -- 작성일 : 2025-10-14
@@ -33,7 +34,7 @@ BEGIN
                                                          , std_dev_srlzone0803_42, std_dev_srlzone0803_41, std_dev_srlzone0803_47, std_dev_srlzone0803_48, std_dev_srlzone0803_49, std_dev_srlzone0803_50, std_dev_srlzone0803_150, std_dev_srlzone0803_174, std_dev_srlzone0803_185, std_dev_srlzone0803_191, std_dev_srlzone0803_53, std_dev_srlzone0803_54, std_dev_srlzone0803_59, std_dev_srlzone0803_60, std_dev_srlzone0803_61, std_dev_srlzone0803_186, std_dev_srlzone0803_192, std_dev_srlzone0803_151, std_dev_srlzone0803_175, std_dev_srlzone0803_65, std_dev_srlzone0803_64, std_dev_srlzone0803_70, std_dev_srlzone0803_71, std_dev_srlzone0803_72, std_dev_srlzone0803_152, std_dev_srlzone0803_176, std_dev_srlzone0803_187, std_dev_srlzone0803_193, std_dev_srlzone0803_76, std_dev_srlzone0803_75, std_dev_srlzone0803_81, std_dev_srlzone0803_82, std_dev_srlzone0803_83, std_dev_srlzone0803_153, std_dev_srlzone0803_177, std_dev_srlzone0803_188, std_dev_srlzone0803_194, std_dev_srlzone0803_87, std_dev_srlzone0803_86, std_dev_srlzone0803_93, std_dev_srlzone0803_94, std_dev_srlzone0803_95, std_dev_srlzone0803_154, std_dev_srlzone0803_178, std_dev_srlzone0803_189, std_dev_srlzone0803_195, std_dev_srlzone0803_101, std_dev_srlzone0803_100, std_dev_srlzone0803_107, std_dev_srlzone0803_108, std_dev_srlzone0803_109, std_dev_srlzone0803_155, std_dev_srlzone0803_179, std_dev_srlzone0803_190, std_dev_srlzone0803_196, std_dev_srlzone0803_1, std_dev_srlzone0803_4, std_dev_srlzone0803_5, std_dev_srlzone0803_6, std_dev_srlzone0803_7, std_dev_srlzone0803_8, std_dev_srlzone0803_9, std_dev_srlzone0803_16, std_dev_srlzone0803_18, std_dev_srlzone0803_19, std_dev_srlzone0803_20, std_dev_srlzone0803_21, std_dev_srlzone0803_34, std_dev_srlzone0803_163, std_dev_srlzone0803_164, std_dev_srlzone0803_165, std_dev_srlzone0803_166, std_dev_srlzone0803_167, std_dev_srlzone0803_169, std_dev_srlzone0803_207, std_dev_srlzone0803_208, std_dev_srlzone0803_209, std_dev_srlzone0803_210, std_dev_srlzone0803_211, std_dev_srlzone0803_115, std_dev_srlzone0803_117, std_dev_srlzone0803_133
                                                          , std_dev_srlzone10_19, std_dev_srlzone10_20, std_dev_srlzone10_21, std_dev_srlzone10_23, std_dev_srlzone10_24, std_dev_srlzone10_25, std_dev_srlzone10_26, std_dev_srlzone10_27, std_dev_srlzone10_29, std_dev_srlzone10_30, std_dev_srlzone10_31, std_dev_srlzone10_32, std_dev_srlzone10_33, std_dev_srlzone10_18, std_dev_srlzone10_1, std_dev_srlzone10_11, std_dev_srlzone10_12, std_dev_srlzone10_13, std_dev_srlzone10_14, std_dev_srlzone10_16, std_dev_srlzone10_17, std_dev_srlzone10_34, std_dev_srlzone10_37, std_dev_srlzone10_38, std_dev_srlzone10_8, std_dev_srlzone10_9
                                                          , std_dev_srlzone11_7, std_dev_srlzone11_8, std_dev_srlzone11_10, std_dev_srlzone11_11, std_dev_srlzone11_12, std_dev_srlzone11_13, std_dev_srlzone11_14, std_dev_srlzone11_15, std_dev_srlzone11_16, std_dev_srlzone11_17, std_dev_srlzone11_21, std_dev_srlzone11_22, std_dev_srlzone11_23, std_dev_srlzone11_24, std_dev_srlzone11_25, std_dev_srlzone11_26, std_dev_srlzone11_27, std_dev_srlzone11_28, std_dev_srlzone11_34, std_dev_srlzone11_35, std_dev_srlzone11_36)
-        (WITH w AS (SELECT DISTINCT lot_no
+        (WITH w AS (SELECT DISTINCT lot_no, heat_no
                       FROM srl_l2.srl_workorder_mt
                      WHERE 
                         trktime >= DATETIME_SUB(p_datetime, INTERVAL 2 MONTH) AND 
@@ -65,7 +66,7 @@ BEGIN
                    )
             , trk AS (SELECT i.zone_cd
                            , t.zone_nm
-                           , t.heat_no
+                           , w.heat_no
                            , cp3.str_no
                            , cp3.ser_no
                            , t.lot_no
@@ -74,7 +75,6 @@ BEGIN
                            , t.entry_dtm
                            , t.exit_dtm
                         FROM (SELECT zone_nm
-                                   , heat_no
                                    , lot_no
                                    , lot_no_seq_no
                                    , lot_tot_proc_seq_no
@@ -97,10 +97,9 @@ BEGIN
                                                  '소형압연 Zone12-RSM',
                                                  '소형압연 Zone13-RTD_LH')
                              ) AS t
-                            INNER JOIN cp3
-                            ON t.lot_no = cp3.lot_no AND t.lot_no_seq_no = cp3.lot_no_seq_no
-                            INNER JOIN srl_l2.srl_zone_info_mt i
-                            ON t.zone_nm = i.zone_nm
+                            INNER JOIN w on t.lot_no = w.lot_no
+                            INNER JOIN cp3 ON t.lot_no = cp3.lot_no AND t.lot_no_seq_no = cp3.lot_no_seq_no
+                            INNER JOIN srl_l2.srl_zone_info_mt i ON t.zone_nm = i.zone_nm
                      QUALIFY COUNTIF(is_anomaly = 'Y') OVER (PARTITION BY t.lot_no, t.lot_no_seq_no) = 0
                    )
             , sec AS (SELECT DATETIME(stats_sec_dtm) AS stats_sec_dtm

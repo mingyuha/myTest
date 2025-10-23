@@ -1,0 +1,13 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "name": "BigQuery_CSS",
+            "authenticator": "SERVICE_ACCOUNT",
+            "location": "asia-northeast3",
+            "previewLimit": 50,
+            "driver": "BigQuery",
+            "keyfile": "/home/lips/biquery_json/css/bigquery-all-dataset.json"
+        }
+    ]
+}
