@@ -1,5 +1,32 @@
 # 작업 제목
-GCP 수집 누락 데이터 업로드 배치 
+GCP 수집 누락 데이터 업로드 배치
+
+---
+## 백업 및 Git 동기화 방법
+> 작업 중 원하는 시점에 아래 명령을 클로드에게 요청하거나 직접 실행
+
+### 클로드에게 요청할 경우
+```
+프로젝트 저장
+```
+
+### 직접 실행할 경우 (WSL 터미널)
+```bash
+# 1. WSL → Windows D드라이브 복사
+cp -r /home/lips/2603_GCP수집누락데이터업로드배치/. /mnt/d/git/myTest/2603_GCP수집누락데이터업로드배치/
+
+# 2. git commit/push
+cd /mnt/d/git/myTest
+git add 2603_GCP수집누락데이터업로드배치/
+git commit -m "작업내용 메시지"
+git push
+```
+
+### 경로 정보
+- **WSL 작업 경로**: `/home/lips/2603_GCP수집누락데이터업로드배치`
+- **Windows git 경로**: `D:\git\myTest\2603_GCP수집누락데이터업로드배치`
+
+---
 ## 개요
 <!-- 이 작업의 목표를 한두 줄로 설명 -->
 - Edge 서버에서 수집한 태그 데이터를 PostgreSQL에 저장하고 동시에 GCS에 파일을 올리고 해당 파일에서 Bigquery로 데이터를 저장한다
