@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>카드 실적 관리</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0C0E14;
+    --surface: #161820;
+    --surface2: #1E2030;
+    --border: #252840;
+    --text: #E8E8F0;
+    --muted: #6B6D80;
+    --dim: #383A50;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* header */
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: fadeDown 0.5s ease;
+  }
+  .header-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .header-date {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .header-reset {
+    margin-top: 14px;
+    display: inline-block;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .header-reset:hover { color: #ff6b6b; border-color: #ff6b6b44; }
+
+  /* card */
+  .card {
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    animation: fadeUp 0.4s ease both;
+  }
+  .card.done { box-shadow: 0 0 28px var(--accent-glow); }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .card-name {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .card-target {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .badge-done {
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 3px 10px;
+    color: #fff;
+    white-space: nowrap;
+    display: none;
+  }
+  .done .badge-done { display: block; }
+
+  /* progress bar */
+  .progress-track {
+    background: var(--surface2);
+    border-radius: 99px;
+    height: 5px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* input */
+  .input-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .input-wrap {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .input-wrap input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 40px 11px 14px;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .input-wrap input:focus { border-color: var(--accent); }
+  .input-wrap .won {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* scheduled */
+  .scheduled-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 7px;
+    letter-spacing: 0.3px;
+  }
+  .scheduled-list { margin-bottom: 14px; display: flex; flex-direction: column; gap: 5px; }
+  .scheduled-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .scheduled-item.off { opacity: 0.35; }
+  .scheduled-item .s-label { font-size: 12px; color: #bbb; }
+  .scheduled-item .s-amount { font-size: 12px; font-weight: 600; }
+
+  /* summary */
+  .summary {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 13px 14px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .summary-row .s-key { font-size: 11px; color: var(--muted); }
+  .summary-row .s-val { font-size: 12px; color: #aaa; }
+  .summary-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+  .summary-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .summary-main .m-key { font-size: 13px; font-weight: 700; }
+  .summary-main .m-val { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+
+  .card-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 11px;
+    padding-left: 2px;
+  }
+
+  /* footer */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: #333;
+    margin-top: 28px;
+  }
+
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-12px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">Card Performance</div>
+  <h1>카드 실적 관리</h1>
+  <div class="header-date" id="headerDate"></div>
+  <div class="header-reset" onclick="resetAll()">🔄 이번 달 초기화</div>
+</div>
+
+<div id="cardList"></div>
+
+<div class="footer">사용금액은 카드사 앱 확인 후 직접 입력하세요</div>
+
+<script>
+const CARDS = [
+  {
+    id: "kb_shopping",
+    name: "국민 쇼핑카드",
+    target: 400000,
+    color: "#FFBF5E",
+    accent: "#E07800",
+    scheduled: [
+      { id:"s1", label:"KB 손보", amount:13967 },
+      { id:"s2", label:"KB 손보", amount:14146 },
+      { id:"s3", label:"신한생명", amount:40400 },
+      { id:"s4", label:"신한생명", amount:32520 },
+      { id:"s5", label:"코웨이", amount:15900 },
+      { id:"s6", label:"DB", amount:20510 },
+    ],
+    note: "⛽ 주유 최소 5만원 별도 조건"
+  },
+  {
+    id: "kb_nexen",
+    name: "국민 넥센타이어",
+    target: 300000,
+    color: "#7DD8F8",
+    accent: "#0099CC",
+    scheduled: [],
+    note: ""
+  },
+  {
+    id: "bc_kt",
+    name: "BC KT",
+    target: 400000,
+    color: "#82E0C4",
+    accent: "#1FAF84",
+    scheduled: [
+      { id:"s1", label:"KT 인터넷", amount:13030 },
+      { id:"s2", label:"KT 요금 ME", amount:106580 },
+      { id:"s3", label:"KT 요금 향수", amount:51750 },
+      { id:"s4", label:"숨 유플러스", amount:66000 },
+    ],
+    note: ""
+  },
+  {
+    id: "hyundai_naver",
+    name: "현대 네이버",
+    target: 300000,
+    color: "#B8A8F0",
+    accent: "#7C5FD4",
+    scheduled: [
+      { id:"s1", label:"네이버플러스 멤버십", amount:11500 },
+    ],
+    note: ""
+  },
+];
+
+// State: { [cardId]: { used: number, offIds: string[] } }
+function loadState() {
+  try {
+    const raw = localStorage.getItem("cardTracker_v2");
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+function saveState(state) {
+  localStorage.setItem("cardTracker_v2", JSON.stringify(state));
+}
+
+let state = loadState();
+
+function getCardState(id) {
+  return state[id] || { used: 0, offIds: [] };
+}
+
+function setUsed(id, val) {
+  const cs = getCardState(id);
+  cs.used = val;
+  state[id] = cs;
+  saveState(state);
+  renderCard(id);
+}
+
+function toggleScheduled(cardId, sId) {
+  const cs = getCardState(cardId);
+  const idx = cs.offIds.indexOf(sId);
+  if (idx >= 0) cs.offIds.splice(idx, 1);
+  else cs.offIds.push(sId);
+  state[cardId] = cs;
+  saveState(state);
+  renderCard(cardId);
+}
+
+function resetAll() {
+  if (!confirm("이번 달 입력값을 모두 초기화할까요?")) return;
+  state = {};
+  saveState(state);
+  CARDS.forEach(c => renderCard(c.id));
+}
+
+function fmt(n) {
+  return n.toLocaleString("ko-KR") + "원";
+}
+
+function renderCard(cardId) {
+  const card = CARDS.find(c => c.id === cardId);
+  const cs = getCardState(cardId);
+  const offIds = cs.offIds || [];
+  const used = cs.used || 0;
+
+  const scheduledTotal = card.scheduled
+    .filter(p => !offIds.includes(p.id))
+    .reduce((s, p) => s + p.amount, 0);
+
+  const total = used + scheduledTotal;
+  const remaining = Math.max(0, card.target - total);
+  const progress = Math.min(100, (total / card.target) * 100);
+  const isDone = remaining === 0 && card.target > 0;
+
+  const el = document.getElementById("card_" + cardId);
+
+  // done state
+  el.classList.toggle("done", isDone);
+  el.style.setProperty("--accent-glow", card.accent + "44");
+  el.style.borderColor = isDone ? card.accent : "";
+
+  // name color
+  el.querySelector(".card-name").style.color = card.color;
+
+  // badge
+  el.querySelector(".badge-done").style.background = card.accent;
+
+  // progress
+  el.querySelector(".progress-fill").style.width = progress + "%";
+
+  // scheduled items
+  card.scheduled.forEach(p => {
+    const item = el.querySelector(`[data-sid="${p.id}"]`);
+    const isOff = offIds.includes(p.id);
+    item.classList.toggle("off", isOff);
+    item.querySelector(".s-amount").style.color = isOff ? "#555" : card.color;
+  });
+
+  // summary
+  el.querySelector(".s-used").textContent = fmt(used);
+  el.querySelector(".s-scheduled").textContent = "+ " + fmt(scheduledTotal);
+
+  const mKey = el.querySelector(".m-key");
+  const mVal = el.querySelector(".m-val");
+  if (isDone) {
+    mKey.textContent = "🎉 실적 달성!";
+    mKey.style.color = card.color;
+    mVal.textContent = "완료";
+    mVal.style.color = card.color;
+  } else {
+    mKey.textContent = "추가 필요 금액";
+    mKey.style.color = "#fff";
+    mVal.textContent = fmt(remaining);
+    mVal.style.color = "#fff";
+  }
+}
+
+function buildCards() {
+  const list = document.getElementById("cardList");
+  list.innerHTML = "";
+
+  CARDS.forEach((card, i) => {
+    const cs = getCardState(card.id);
+    const usedVal = cs.used || 0;
+
+    const scheduledHTML = card.scheduled.length > 0 ? `
+      <div class="scheduled-label">예약결제 (탭으로 포함/제외)</div>
+      <div class="scheduled-list">
+        ${card.scheduled.map(p => `
+          <div class="scheduled-item" data-sid="${p.id}" onclick="toggleScheduled('${card.id}','${p.id}')">
+            <span class="s-label">${p.label}</span>
+            <span class="s-amount" style="color:${card.color}">${p.amount.toLocaleString("ko-KR")}원</span>
+          </div>
+        `).join("")}
+      </div>
+    ` : "";
+
+    const noteHTML = card.note ? `<div class="card-note">${card.note}</div>` : "";
+
+    const div = document.createElement("div");
+    div.className = "card";
+    div.id = "card_" + card.id;
+    div.style.animationDelay = (i * 0.08) + "s";
+    div.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${card.name}</div>
+          <div class="card-target">목표 ${fmt(card.target)}</div>
+        </div>
+        <div class="badge-done">✓ 달성</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="background: linear-gradient(90deg, ${card.accent}, ${card.color})"></div>
+      </div>
+      <div class="input-label">이번 달 사용금액 (카드사 앱 확인 후 입력)</div>
+      <div class="input-wrap">
+        <input
+          type="number"
+          inputmode="numeric"
+          placeholder="0"
+          value="${usedVal || ""}"
+          onchange="setUsed('${card.id}', parseInt(this.value)||0)"
+          oninput="setUsed('${card.id}', parseInt(this.value)||0)"
+          style="--accent:${card.accent}"
+        >
+        <span class="won">원</span>
+      </div>
+      ${scheduledHTML}
+      <div class="summary">
+        <div class="summary-row">
+          <span class="s-key">직접 사용</span>
+          <span class="s-val s-used">${fmt(usedVal)}</span>
+        </div>
+        <div class="summary-row">
+          <span class="s-key">예약결제 합산</span>
+          <span class="s-val s-scheduled">+ ${fmt(0)}</span>
+        </div>
+        <hr class="summary-divider">
+        <div class="summary-main">
+          <span class="m-key">추가 필요 금액</span>
+          <span class="m-val">-</span>
+        </div>
+      </div>
+      ${noteHTML}
+    `;
+    list.appendChild(div);
+
+    renderCard(card.id);
+  });
+}
+
+// date header
+document.getElementById("headerDate").textContent =
+  new Date().toLocaleDateString("ko-KR", { year:"numeric", month:"long" }) + " 기준";
+
+buildCards();
+</script>
+</body>
+</html>
