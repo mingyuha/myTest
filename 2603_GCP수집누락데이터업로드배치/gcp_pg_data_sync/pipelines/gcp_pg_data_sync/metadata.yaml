@@ -1,0 +1,159 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: markdown
+  name: nimble rune
+  retry_config: null
+  status: updated
+  timeout: null
+  type: markdown
+  upstream_blocks: []
+  uuid: nimble_rune
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - gcp_pg_data_sync_plc
+  - gcp_pg_data_sync_idtrk
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: get_chk_data
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: get_chk_data
+- all_upstream_blocks_executed: true
+  color: blue
+  configuration:
+    file_path: custom/gcp_pg_data_sync_plc.py
+    file_source:
+      path: custom/gcp_pg_data_sync_plc.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: gcp_pg_data_sync_plc
+  retry_config: null
+  status: executed
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - get_chk_data
+  uuid: gcp_pg_data_sync_plc
+- all_upstream_blocks_executed: true
+  color: pink
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: gcp_pg_data_sync_idtrk
+  retry_config: null
+  status: executed
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - get_chk_data
+  uuid: gcp_pg_data_sync_idtrk
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - gcp_pg_data_upload_hour
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: get_gcp_pg_upload_error_hourly_ht
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: get_gcp_pg_upload_error_hourly_ht
+- all_upstream_blocks_executed: true
+  color: blue
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: gcp_pg_data_upload_hour
+  retry_config: null
+  status: executed
+  timeout: null
+  type: custom
+  upstream_blocks:
+  - get_gcp_pg_upload_error_hourly_ht
+  uuid: gcp_pg_data_upload_hour
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: continue_plc
+  retry_config: null
+  status: updated
+  timeout: null
+  type: conditional
+  upstream_blocks:
+  - gcp_pg_data_sync_plc
+  uuid: continue_plc
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: continue_idtrk
+  retry_config: null
+  status: updated
+  timeout: null
+  type: conditional
+  upstream_blocks:
+  - gcp_pg_data_sync_idtrk
+  uuid: continue_idtrk
+created_at: '2024-11-20 02:01:29.676585+00:00'
+data_integration: null
+description: GCP 누락데이터 처리
+executor_config: {}
+executor_count: 1
+executor_type: null
+extensions: {}
+name: gcp_pg_data_sync
+notification_config: {}
+remote_variables_dir: null
+retry_config: {}
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags:
+- 하민규
+type: python
+uuid: gcp_pg_data_sync
+variables:
+  corp_cd: css
+variables_dir: /home/src/mage_data/DataForge
+widgets: []
