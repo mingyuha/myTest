@@ -1,6 +1,7 @@
 from mage_ai.settings.repo import get_repo_path
 from mage_ai.io.config import ConfigFileLoader
 from mage_ai.io.postgres import Postgres
+from mage_ai.orchestration.triggers.api import trigger_pipeline
 from pandas import DataFrame
 from os import path
 from json import dumps
@@ -81,5 +82,18 @@ Table Uid:{table_uid}
 ===========================
             '''
             app_message['text']=app_message['text']+message
-        # print(app_message)        
+        # print(app_message)
         send_webhook(kwargs['web_h_url'], app_message)
+
+        # diff_cnt < -100 인 건이 하나라도 있으면 gcp_pg_data_check_sync 파이프라인 트리거
+        if (df['diff_cnt'] < -100).any():
+            trigger_pipeline(
+                'gcp_pg_data_check_sync',
+                variables={},
+                check_status=False,
+                error_on_failure=False,
+                poll_interval=60,
+                poll_timeout=None,
+                schedule_name='gcp_pg_data_check_sync',
+                verbose=True,
+            )

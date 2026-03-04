@@ -1,0 +1,57 @@
+BEGIN
+
+DECLARE s_dt timestamp default timestamp(s_dt_str);
+DECLARE e_dt timestamp default timestamp(e_dt_str);
+
+DECLARE target_bucket_nm string default format('%s-zbackup',project_nm);
+
+DECLARE target_dt_arr ARRAY<timestamp>;
+DECLARE target_dt datetime;
+DECLARE target_yr_str string;
+DECLARE target_dt_str string;
+DECLARE target_dt_hh_str string;
+
+DECLARE export_query string;
+
+DECLARE tcnt INT64 DEFAULT 0;
+
+set result_str = 'success';
+
+SET target_dt_arr =
+(
+  SELECT GENERATE_TIMESTAMP_ARRAY(s_dt, e_dt, INTERVAL 1 hour)
+);
+
+WHILE tcnt < ARRAY_LENGTH(target_dt_arr) DO
+
+  SET target_dt = datetime(target_dt_arr[OFFSET(tcnt)], 'Asia/Seoul');
+  SET target_yr_str = format_datetime('%Y', target_dt);
+  SET target_dt_str = format_datetime('%Y-%m-%d', target_dt);
+  SET target_dt_hh_str = format_datetime('%Y%m%d%H', target_dt);
+
+  SET export_query = FORMAT("""
+    export data
+      options (
+        uri='gs://%s/%s/%s/yr=%s/dt=%s/%s_%s_*_.bigquery.json.gz'
+        ,format='json'
+        ,compression='GZIP'
+        ,overwrite=true
+      )
+    as(
+      SELECT * 
+      FROM `%s`.%s.%s
+      WHERE date_trunc(%s, hour) >= datetime_trunc('%t', hour) and %s < datetime_add(datetime_trunc('%t', hour), INTERVAL 1 hour)
+    );
+  """,target_bucket_nm,src_bucket_nm,target_folder1_nm,target_yr_str,target_dt_str,target_folder1_nm,target_dt_hh_str,project_nm,dataset_nm,table_nm,partition_column_nm,target_dt,partition_column_nm,target_dt
+  );
+  select export_query;
+  execute immediate export_query;
+
+  SET tcnt = tcnt + 1;
+
+END WHILE;
+
+EXCEPTION WHEN ERROR THEN
+  set result_str = @@error.message; --'failed';
+select result_str;
+END
