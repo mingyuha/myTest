@@ -119,12 +119,19 @@ def transform_custom(*args, **kwargs):
     client = bigquery.Client(credentials=credentials)
 
     df_missing = args[0]
+    if isinstance(df_missing, list):
+        df_missing = df_missing[0] if df_missing else pd.DataFrame()
+
+    _RESULT_COLUMNS = [
+        'table_uid', 'chk_dte', 'bq_project_nm', 'bq_dataset_nm', 'bq_table_nm',
+        'bq_prtn_col', 'pgsql_db_nm', 'pgsql_schema_nm', 'pgsql_table_nm'
+    ]
 
     if df_missing.empty:
         print("업로드 대상 없음 - 종료")
-        return pd.DataFrame()
+        return pd.DataFrame(columns=_RESULT_COLUMNS)
 
-    df_done = pd.DataFrame()
+    df_done = pd.DataFrame(columns=_RESULT_COLUMNS)
     total = len(df_missing)
 
     for idx, row in df_missing.iterrows():

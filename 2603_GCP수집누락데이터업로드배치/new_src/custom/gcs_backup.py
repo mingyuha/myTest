@@ -27,10 +27,12 @@ def transform_custom(*args, **kwargs):
     client = bigquery.Client(credentials=credentials)
 
     df_done = args[0]
+    if isinstance(df_done, list):
+        df_done = df_done[0] if df_done else pd.DataFrame()
 
     if df_done.empty:
         print("GCS 백업 대상 없음 - 종료")
-        return
+        return pd.DataFrame(columns=['table_uid', 'chk_dte', 'result_str'])
 
     total = len(df_done)
 

@@ -88,12 +88,27 @@ def transform_custom(*args, **kwargs):
     }
 
     df_targets = args[0]
+    if isinstance(df_targets, list):
+        df_targets = df_targets[0] if df_targets else pd.DataFrame()
+
+    _RESULT_COLUMNS = [
+        'table_uid', 'chk_dte', 'bq_cnt', 'pgsql_cnt', 'diff_cnt',
+        'after_work_bq_cnt', 'work_yn',
+        'bq_project_nm', 'bq_dataset_nm', 'bq_table_nm', 'bq_prtn_column_nm',
+        'pgsql_db_nm', 'pgsql_schema_nm', 'pgsql_table_nm', 'ip', 'port'
+    ]
 
     if df_targets.empty:
         print("처리 대상 없음 - 종료")
-        return pd.DataFrame()
+        return pd.DataFrame(columns=_RESULT_COLUMNS)
 
-    df_result = pd.DataFrame()
+    _RESULT_COLUMNS = [
+        'table_uid', 'chk_dte', 'bq_cnt', 'pgsql_cnt', 'diff_cnt',
+        'after_work_bq_cnt', 'work_yn',
+        'bq_project_nm', 'bq_dataset_nm', 'bq_table_nm', 'bq_prtn_column_nm',
+        'pgsql_db_nm', 'pgsql_schema_nm', 'pgsql_table_nm', 'ip', 'port'
+    ]
+    df_result = pd.DataFrame(columns=_RESULT_COLUMNS)
     total = len(df_targets)
 
     for idx, row in df_targets.iterrows():
@@ -150,14 +165,18 @@ def transform_custom(*args, **kwargs):
 
         # diff_cnt < 0 인 시간대만 추출
         df_missing = df_join[df_join['diff_cnt'] < 0].copy()
-        df_missing['table_uid']       = table_uid
-        df_missing['bq_dataset_nm']   = bq_dataset_nm
-        df_missing['bq_table_nm']     = bq_table_nm
-        df_missing['pgsql_db_nm']     = pgsql_db_nm
-        df_missing['pgsql_schema_nm'] = pgsql_schema_nm
-        df_missing['pgsql_table_nm']  = pgsql_table_nm
+        df_missing['table_uid']         = table_uid
+        df_missing['bq_project_nm']     = bq_project_nm
+        df_missing['bq_dataset_nm']     = bq_dataset_nm
+        df_missing['bq_table_nm']       = bq_table_nm
+        df_missing['bq_prtn_column_nm'] = bq_prtn_col
+        df_missing['pgsql_db_nm']       = pgsql_db_nm
+        df_missing['pgsql_schema_nm']   = pgsql_schema_nm
+        df_missing['pgsql_table_nm']    = pgsql_table_nm
+        df_missing['ip']                = row['ip']
+        df_missing['port']              = row['port']
         df_missing['after_work_bq_cnt'] = 0
-        df_missing['work_yn']         = 'N'
+        df_missing['work_yn']           = 'N'
 
         print(f"  누락 시간대: {len(df_missing)}개")
 
