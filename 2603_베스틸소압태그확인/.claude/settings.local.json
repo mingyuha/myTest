@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(git:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//home/lips/2603_베스틸소압태그확인/**)",
+      "Bash(done)"
     ]
   }
 }

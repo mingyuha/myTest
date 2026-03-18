@@ -6,16 +6,16 @@
 
 WITH params AS (
   SELECT
-    DATE '2026-03-17' AS start_date,  -- ← 시작 날짜
-    DATE '2026-03-17' AS end_date     -- ← 종료 날짜 (단일 날짜면 start_date와 동일하게)
+    DATETIME '2026-03-17 00:00:00' AS start_dt,  -- ← 시작 일시 (분 단위 지정 가능)
+    DATETIME '2026-03-17 23:59:00' AS end_dt     -- ← 종료 일시 (분 단위 지정 가능)
 ),
 
 raw_get1m AS (
   SELECT disp_tag_nm, opc_srv_dtm, opc_src_dtm, tag_value
   FROM `dataforge-seahbst.sbm_tag.acm_tag_mt`
   WHERE clct_type_cd = 'get1m'
-    AND opc_srv_dtm >= DATETIME((SELECT start_date FROM params))
-    AND opc_srv_dtm <  DATETIME_ADD(DATETIME((SELECT end_date FROM params)), INTERVAL 1 DAY)
+    AND opc_srv_dtm >= (SELECT start_dt FROM params)
+    AND opc_srv_dtm <= (SELECT end_dt FROM params)
     AND disp_tag_nm IN (
         'SBM_2.AFT.ACM_1_WHEEL_DIAMETER_TCP_ROTATION_ACTUAL_LENGTH',
         'SBM_2.AFT.ACM_2_WHEEL_DIAMETER_TCP_ROTATION_ACTUAL_LENGTH',

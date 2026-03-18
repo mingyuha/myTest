@@ -2,9 +2,10 @@
 -- [쿼리 01] 비정상 구간 목록
 -- 분석 항목: 비정상 시작 시점 목록, 비정상 전환 횟수, 비정상 구간 지속 시간
 --
--- [날짜 변경] params CTE의 start_date / end_date를 수정하세요.
---   단일 날짜: start_date = end_date (하루치)
---   범위 조회: start_date ~ end_date (여러 날, 구간이 날짜 경계를 넘어도 자동 처리)
+-- [날짜 변경] params CTE의 start_dt / end_dt를 수정하세요.
+--   하루 전체: DATETIME '2026-03-17 00:00:00' ~ DATETIME '2026-03-17 23:59:00'
+--   시간 범위: DATETIME '2026-03-17 09:00:00' ~ DATETIME '2026-03-17 18:00:00'
+--   범위 조회: start_dt ~ end_dt (여러 날, 구간이 날짜 경계를 넘어도 자동 처리)
 -- [태그 추가] raw_get1m CTE의 IN 절에 태그를 추가하세요.
 -- [시간 필터] min_duration_hour / max_duration_hour로 구간 길이 필터링
 --   필터 없음: min = 0, max = 999
@@ -14,10 +15,10 @@
 
 WITH params AS (
   SELECT
-    DATE '2026-03-17' AS start_date,       -- ← 시작 날짜
-    DATE '2026-03-17' AS end_date,         -- ← 종료 날짜 (단일 날짜면 start_date와 동일하게)
-    0                 AS min_duration_hour, -- ← 최소 지속 시간 (이상, 필터 없으면 0)
-    999               AS max_duration_hour  -- ← 최대 지속 시간 (이하, 필터 없으면 999)
+    DATETIME '2026-03-17 00:00:00' AS start_dt,          -- ← 시작 일시 (분 단위 지정 가능)
+    DATETIME '2026-03-17 23:59:00' AS end_dt,            -- ← 종료 일시 (분 단위 지정 가능)
+    0                              AS min_duration_hour,  -- ← 최소 지속 시간 (이상, 필터 없으면 0)
+    999                            AS max_duration_hour   -- ← 최대 지속 시간 (이하, 필터 없으면 999)
 ),
 
 -- get1m 데이터 기준으로 freeze 감지 (1분 주기로 opc_src_dtm 변화 여부 확인)
@@ -25,8 +26,8 @@ raw_get1m AS (
   SELECT disp_tag_nm, opc_srv_dtm, opc_src_dtm, tag_value
   FROM `dataforge-seahbst.sbm_tag.acm_tag_mt`
   WHERE clct_type_cd = 'get1m'
-    AND opc_srv_dtm >= DATETIME((SELECT start_date FROM params))
-    AND opc_srv_dtm <  DATETIME_ADD(DATETIME((SELECT end_date FROM params)), INTERVAL 1 DAY)
+    AND opc_srv_dtm >= (SELECT start_dt FROM params)
+    AND opc_srv_dtm <= (SELECT end_dt FROM params)
     AND disp_tag_nm IN (
         'SBM_2.AFT.ACM_1_WHEEL_DIAMETER_TCP_ROTATION_ACTUAL_LENGTH',
         'SBM_2.AFT.ACM_2_WHEEL_DIAMETER_TCP_ROTATION_ACTUAL_LENGTH',
