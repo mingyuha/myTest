@@ -212,8 +212,8 @@ def transform_custom(*args, **kwargs):
         bq_table_id = f'{bq_project_nm}.{bq_dataset_nm}.{bq_table_nm}'
 
         # 해당 시간대 범위 계산
-        st_dt = chk_dte
-        end_dt = (datetime.datetime.strptime(chk_dte, '%Y-%m-%d %H:00:00') + datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')
+        st_dt = str(chk_dte)
+        end_dt = (datetime.datetime.strptime(str(chk_dte), '%Y-%m-%d %H:00:00') + datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:00:00')
 
         conf['dbname'] = pgsql_db_nm
         conf['host']   = row['ip']
