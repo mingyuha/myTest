@@ -4,12 +4,57 @@ from mage_ai.io.bigquery import BigQuery
 from mage_ai.io.postgres import Postgres
 from google.cloud import bigquery
 from google.oauth2 import service_account
+from pytz import timezone
 from os import path
 import datetime
 import pandas as pd
 
 if 'custom' not in globals():
     from mage_ai.data_preparation.decorators import custom
+
+# -------------------------------------------------------------------------
+# 선행 블록 데이터 없을 때 DB 직접 조회 기준일 설정
+# None 이면 전일 0시(KST) 자동 계산, 수동 지정 시 아래 값을 변경
+# 예: CHK_DT_OVERRIDE = '2026-03-01 00:00:00'
+# -------------------------------------------------------------------------
+CHK_DT_OVERRIDE = None
+
+
+def get_gcp_pg_table_chk_ht(chk_dt):
+    """gcp_pg_upload_error_hourly_ht 에서 미처리(work_yn='N') 누락 건 조회"""
+    sql_query = f"""
+        select
+            ht.table_uid,
+            ht.chk_dte,
+            ht.diff_cnt,
+            ht.bq_cnt,
+            ht.pgsql_cnt,
+            ctm.bq_project_nm,
+            ctm.bq_dataset_nm,
+            ctm.bq_table_nm,
+            ctm.pgsql_db_nm,
+            ctm.pgsql_schema_nm,
+            ctm.pgsql_table_nm,
+            ctm.bq_prtn_column_nm,
+            ctm.pgsql_dtm_column_nm,
+            pdimm.access_ip as ip,
+            pdimm.access_port as port
+        from
+            comm_df.gcp_pg_upload_error_hourly_ht ht,
+            comm_df.clct_table_mt ctm,
+            comm_df.db_mt pdimm
+        where
+            ht.diff_cnt < 0
+            and ht.table_uid = ctm.table_uid
+            and ctm.pgsql_db_nm = pdimm.db_nm
+            and chk_dte >= '{chk_dt}'
+            and work_yn = 'N'
+            and (bq_dataset_nm like '%_tag' or bq_table_nm like '%l2_mid_trk_mt')
+        order by
+            ht.table_uid, ht.chk_dte
+        ;
+    """
+    return sql_query
 
 
 def get_delete_query(bq_table_id, st_dt, end_dt, date_col):
@@ -128,8 +173,24 @@ def transform_custom(*args, **kwargs):
     ]
 
     if df_missing.empty:
-        print("업로드 대상 없음 - 종료")
-        return pd.DataFrame(columns=_RESULT_COLUMNS)
+        print("선행 블록 데이터 없음 - DB에서 직접 조회")
+        KST = timezone('Asia/Seoul')
+        if CHK_DT_OVERRIDE is not None:
+            chk_dt_str = CHK_DT_OVERRIDE
+        else:
+            yesterday = datetime.datetime.now(tz=KST) - datetime.timedelta(days=1)
+            chk_dt_str = yesterday.strftime('%Y-%m-%d 00:00:00')
+        print(f"  기준일: {chk_dt_str}")
+
+        pg_query = get_gcp_pg_table_chk_ht(chk_dt_str)
+        with Postgres.with_config(ConfigFileLoader(pg_config_path, pg_config_profile)) as loader:
+            df_missing = loader.load(pg_query)
+
+        if df_missing.empty:
+            print("DB 조회 결과도 없음 - 종료")
+            return pd.DataFrame(columns=_RESULT_COLUMNS)
+
+        print(f"  DB 조회: {len(df_missing)}건")
 
     df_done = pd.DataFrame(columns=_RESULT_COLUMNS)
     total = len(df_missing)
@@ -192,18 +253,27 @@ def transform_custom(*args, **kwargs):
 
         # 1. BQ 해당 시간대 DELETE
         bq_delete = get_delete_query(bq_table_id, st_dt, end_dt, date_col)
-        client.query(bq_delete)
-        print(f"  BQ DELETE 완료")
+        try:
+            client.query(bq_delete).result()  # 동기 처리 - DELETE 완료 보장
+            print(f"  BQ DELETE 완료")
+        except Exception as e:
+            print(f"  BQ DELETE 실패 - 스킵: {e}")
+            continue
 
         # 2. BQ INSERT
-        BigQuery.with_config(ConfigFileLoader(bq_config_path, bq_config_profile)).export(
-            pg_result,
-            bq_table_id,
-            if_exists='append',
-            overwrite_types=None,
-            verbose=False
-        )
-        print(f"  BQ INSERT 완료: {len(pg_result)}건")
+        try:
+            BigQuery.with_config(ConfigFileLoader(bq_config_path, bq_config_profile)).export(
+                pg_result,
+                bq_table_id,
+                if_exists='append',
+                overwrite_types=None,
+                verbose=False
+            )
+            print(f"  BQ INSERT 완료: {len(pg_result)}건")
+        except Exception as e:
+            print(f"  BQ INSERT 실패: {e}")
+            print(f"  [경고] {bq_table_id} {st_dt} ~ {end_dt} DELETE 후 INSERT 실패 - 수동 복구 필요")
+            continue
 
         # 3. BQ 건수 재확인
         bq_cnt_query = get_bq_cnt_query(bq_table_id, st_dt, end_dt, date_col)

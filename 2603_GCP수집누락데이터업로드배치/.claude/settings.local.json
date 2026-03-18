@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cp -r /home/lips/2603_GCP수집누락데이터업로드배치/. /mnt/d/git/myTest/2603_GCP수집누락데이터업로드배치/)"
+      "Bash(cp -r /home/lips/2603_GCP수집누락데이터업로드배치/. /mnt/d/git/myTest/2603_GCP수집누락데이터업로드배치/)",
+      "Bash(cp:*)"
     ]
   }
 }
