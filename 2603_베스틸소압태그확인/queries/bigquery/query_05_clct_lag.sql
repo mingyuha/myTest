@@ -10,8 +10,8 @@
 
 WITH params AS (
   SELECT
-    DATETIME '2026-03-17 00:00:00' AS start_dt,  -- ← 시작 일시 (분 단위 지정 가능)
-    DATETIME '2026-03-17 23:59:00' AS end_dt     -- ← 종료 일시 (분 단위 지정 가능)
+    DATETIME_TRUNC(DATETIME_SUB(CURRENT_DATETIME(), INTERVAL 1 DAY), DAY) AS start_dt,  -- ← 어제 0시
+    DATETIME_ADD(DATETIME_TRUNC(CURRENT_DATETIME(), DAY), INTERVAL 8 HOUR) AS end_dt    -- ← 오늘 8시
 ),
 
 -- [Part A/B/C 공통] get1m 기준 비정상 구간 탐지

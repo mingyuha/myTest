@@ -1,27 +1,15 @@
 -- ====================================================================
--- [쿼리 01] 비정상 구간 목록
--- 분석 항목: 비정상 시작 시점 목록, 비정상 전환 횟수, 비정상 구간 지속 시간
---
--- [날짜 변경] params CTE의 start_dt / end_dt를 수정하세요.
---   하루 전체: DATETIME '2026-03-17 00:00:00' ~ DATETIME '2026-03-17 23:59:00'
---   시간 범위: DATETIME '2026-03-17 09:00:00' ~ DATETIME '2026-03-17 18:00:00'
---   범위 조회: start_dt ~ end_dt (여러 날, 구간이 날짜 경계를 넘어도 자동 처리)
--- [태그 추가] raw_get1m CTE의 IN 절에 태그를 추가하세요.
--- [시간 필터] min_duration_hour / max_duration_hour로 구간 길이 필터링
---   필터 없음: min = 0, max = 999
---   예) 10시간 초과만: min_duration_hour = 10, max_duration_hour = 999
---   예) 1~5시간 구간만: min_duration_hour = 1, max_duration_hour = 5
+-- [쿼리 02] 요약 통계
+-- 분석 항목: 비정상 구간 빈도, MTTR(평균 복구 시간), MTBF(평균 정상 유지 시간),
+--            지속 시간 분포 (min / avg / max / p25 / p50 / p75)
 -- ====================================================================
 
 WITH params AS (
   SELECT
-    DATETIME '2026-03-17 00:00:00' AS start_dt,          -- ← 시작 일시 (분 단위 지정 가능)
-    DATETIME '2026-03-17 23:59:00' AS end_dt,            -- ← 종료 일시 (분 단위 지정 가능)
-    0                              AS min_duration_hour,  -- ← 최소 지속 시간 (이상, 필터 없으면 0)
-    999                            AS max_duration_hour   -- ← 최대 지속 시간 (이하, 필터 없으면 999)
+    DATETIME_TRUNC(DATETIME_SUB(CURRENT_DATETIME(), INTERVAL 1 DAY), DAY) AS start_dt,  -- ← 어제 0시
+    DATETIME_ADD(DATETIME_TRUNC(CURRENT_DATETIME(), DAY), INTERVAL 8 HOUR) AS end_dt    -- ← 오늘 8시
 ),
 
--- get1m 데이터 기준으로 freeze 감지 (1분 주기로 opc_src_dtm 변화 여부 확인)
 raw_get1m AS (
   SELECT disp_tag_nm, opc_srv_dtm, opc_src_dtm, tag_value
   FROM `dataforge-seahbst.sbm_tag.acm_tag_mt`
@@ -68,25 +56,22 @@ raw_get1m AS (
     )
 ),
 
--- 이전 row의 opc_src_dtm 가져오기
 with_prev AS (
   SELECT *,
     LAG(opc_src_dtm) OVER (PARTITION BY disp_tag_nm ORDER BY opc_srv_dtm) AS prev_src_dtm
   FROM raw_get1m
 ),
 
--- 정상/비정상 플래그: opc_src_dtm이 이전 row와 동일하면 비정상(freeze)
 flagged AS (
   SELECT *,
     CASE
-      WHEN prev_src_dtm IS NULL          THEN 'normal'    -- 첫 번째 row
-      WHEN opc_src_dtm = prev_src_dtm    THEN 'abnormal'  -- freeze
+      WHEN prev_src_dtm IS NULL          THEN 'normal'
+      WHEN opc_src_dtm = prev_src_dtm    THEN 'abnormal'
       ELSE                                    'normal'
     END AS state
   FROM with_prev
 ),
 
--- 상태 변경 여부 플래그 (LAG는 중첩 불가하므로 별도 CTE로 분리)
 with_state_change AS (
   SELECT *,
     CASE
@@ -96,28 +81,44 @@ with_state_change AS (
   FROM flagged
 ),
 
--- 상태 변경 시마다 seg_id 증가 (islands & gaps 기법)
 segmented AS (
   SELECT *,
     SUM(is_new_seg) OVER (PARTITION BY disp_tag_nm ORDER BY opc_srv_dtm ROWS UNBOUNDED PRECEDING) AS seg_id
   FROM with_state_change
+),
+
+seg_summary AS (
+  SELECT
+    disp_tag_nm, seg_id, state,
+    MIN(opc_srv_dtm)                                                AS seg_start,
+    MAX(opc_srv_dtm)                                                AS seg_end,
+    ROUND((DATETIME_DIFF(MAX(opc_srv_dtm), MIN(opc_srv_dtm), MINUTE) + 1) / 60.0, 2)  AS duration_hour
+  FROM segmented
+  GROUP BY disp_tag_nm, seg_id, state
+),
+
+-- 비정상 구간에 다음 비정상 구간 시작 시각 추가 (MTBF 계산: end → next start 간격)
+abnormal_segs AS (
+  SELECT *,
+    LEAD(seg_start) OVER (PARTITION BY disp_tag_nm ORDER BY seg_start) AS next_abnormal_start
+  FROM seg_summary
+  WHERE state = 'abnormal'
 )
 
--- 비정상 구간만 집계 출력
 SELECT
   disp_tag_nm,
-  MIN(opc_srv_dtm)                                                  AS seg_start,       -- 비정상 시작 시점
-  MAX(opc_srv_dtm)                                                  AS seg_end,         -- 비정상 종료 시점
-  ROUND((DATETIME_DIFF(MAX(opc_srv_dtm), MIN(opc_srv_dtm), MINUTE) + 1) / 60.0, 2)  AS duration_hour,  -- 지속 시간(시간)
-  COUNT(*)                                                          AS row_count,       -- 구간 내 row 수
-  ANY_VALUE(opc_src_dtm)                                            AS frozen_src_dtm,  -- 고착된 소스 시각
-  ANY_VALUE(tag_value)                                              AS frozen_tag_value -- 고착된 태그 값
-FROM segmented
-WHERE state = 'abnormal'
-GROUP BY disp_tag_nm, seg_id
-HAVING
-  ROUND((DATETIME_DIFF(MAX(opc_srv_dtm), MIN(opc_srv_dtm), MINUTE) + 1) / 60.0, 2)
-    BETWEEN (SELECT min_duration_hour FROM params)
-        AND (SELECT max_duration_hour FROM params)
-ORDER BY disp_tag_nm, seg_start
+  COUNT(*)                                                               AS abnormal_count,   -- 비정상 전환 횟수
+  ROUND(SUM(duration_hour) / 24.0 * 100, 1)                                        AS abnormal_pct,      -- 하루 중 비정상 비율(%)
+  -- MTTR: 각 비정상 구간 지속 시간 통계 (시간)
+  ROUND(AVG(duration_hour),  2)                                                     AS mttr_avg_hour,
+  MIN(duration_hour)                                                                AS mttr_min_hour,
+  MAX(duration_hour)                                                                AS mttr_max_hour,
+  ROUND(APPROX_QUANTILES(duration_hour, 4)[OFFSET(1)], 2)                          AS mttr_p25_hour,
+  ROUND(APPROX_QUANTILES(duration_hour, 4)[OFFSET(2)], 2)                          AS mttr_p50_hour,
+  ROUND(APPROX_QUANTILES(duration_hour, 4)[OFFSET(3)], 2)                          AS mttr_p75_hour,
+  -- MTBF: 연속 비정상 구간 사이의 평균 정상 간격 (시간)
+  ROUND(AVG(DATETIME_DIFF(next_abnormal_start, seg_end, MINUTE)) / 60.0, 2)       AS mtbf_avg_hour
+FROM abnormal_segs
+GROUP BY disp_tag_nm
+ORDER BY disp_tag_nm
 ;
