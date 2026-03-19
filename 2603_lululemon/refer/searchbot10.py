@@ -464,6 +464,9 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
             open(fileName, "x", encoding='utf8').close()
 
         try:
+            import ssl as _ssl
+            if not hasattr(_ssl.SSLContext, 'orig_wrap_socket'):
+                _ssl.SSLContext.orig_wrap_socket = _ssl.SSLContext.wrap_socket
             scraper = cloudscraper.create_scraper()
             res = scraper.get(productUrl)
         except Exception as e:
