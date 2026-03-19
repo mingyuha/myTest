@@ -453,17 +453,15 @@ def getMegaBoxTitle(dateStr, megaTitle, URL_Megabox, data_Title, fileNameMegaBox
 
 def getLululemon(fileName, productUrl, productName, targetColor, targetSize, logger, now1):
     try:
-        if os.path.exists(fileName):
-            f = open(fileName, "r", encoding='utf8')
-        else:
-            f = open(fileName, "x", encoding='utf8')
-
         currentList = []
         newList = []
 
-        for cl in f:
-            currentList.append(cl.lstrip().rstrip())
-        f.close()
+        if os.path.exists(fileName):
+            with open(fileName, "r", encoding='utf8') as f:
+                for cl in f:
+                    currentList.append(cl.lstrip().rstrip())
+        else:
+            open(fileName, "x", encoding='utf8').close()
 
         scraper = cloudscraper.create_scraper()
         res = scraper.get(productUrl)
