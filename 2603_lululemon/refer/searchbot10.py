@@ -806,7 +806,7 @@ def job():
 
 
     lululemon_url = 'https://www.lululemon.co.kr/ko-kr/p/%ED%8C%A8%EC%8A%A4%ED%8A%B8-%EC%95%A4-%ED%94%84%EB%A6%AC-%ED%95%98%ED%94%84-%ED%83%80%EC%9D%B4%EC%B8%A0-8%22/prod11380319.html?dwvar_prod11380319_color=0001'
-    scraperapi_key = config['DEFAULT'].get('scraperapi_key', '2a1597b8a84866c87643a72ceafca707')
+    scraperapi_key = config['DEFAULT'].get('scraperapi_key', '')
     getLululemon(fileNameLululemon, lululemon_url, '패스트 앤 프리 하프 타이츠 8', 'Black', 'M', logger, now1, scraperapi_key)
 
     logger.handlers.clear()
