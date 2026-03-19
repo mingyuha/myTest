@@ -467,51 +467,91 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
         else:
             open(fileName, "x", encoding='utf8').close()
 
-        res = None
-        try:
-            session = cf_requests.Session(impersonate="chrome120")
-            session.get('https://www.lululemon.co.kr/')
-            res = session.get(productUrl)
-            if res.status_code != 200:
-                raise Exception(f"status {res.status_code}")
-        except Exception as e:
-            logger.warning(f"getLululemon curl_cffi failed ({e}), fallback to cloudscraper")
-            try:
-                scraper = cloudscraper.create_scraper()
-                ca_bundle = certifi.where()
-                scraper.get('https://www.lululemon.co.kr/', verify=ca_bundle)
-                res = scraper.get(productUrl, verify=ca_bundle)
-                if res.status_code != 200:
-                    raise Exception(f"status {res.status_code}")
-            except Exception as e2:
-                logger.warning(f"getLululemon cloudscraper failed ({e2}), fallback to requests")
-                session2 = requests.Session()
-                session2.verify = False
-                session2.get('https://www.lululemon.co.kr/')
-                res = session2.get(productUrl)
-
-        if res.status_code != 200:
-            logger.warning(f"getLululemon HTTP error: {res.status_code}")
-            return
-
         import re as _re
-        scripts = _re.findall(r'<script type="application/ld\+json">(.*?)</script>', res.text, _re.DOTALL)
+
+        # 제품 ID, 색상 코드 추출
+        pid_match = _re.search(r'/(prod\d+)\.html', productUrl)
+        color_match = _re.search(r'dwvar_prod\d+_color=(\w+)', productUrl)
+        pid = pid_match.group(1) if pid_match else None
+        color_code = color_match.group(1) if color_match else None
 
         isAvailable = False
-        for s in scripts:
+
+        # 1순위: SFCC Product-Variation AJAX API
+        sfcc_success = False
+        if pid and color_code:
+            for site_id in ['Sites-KR-Site', 'Sites-lululemon-kr-Site']:
+                try:
+                    ajax_url = (
+                        f'https://www.lululemon.co.kr/on/demandware.store/{site_id}/ko_KR/Product-Variation'
+                        f'?pid={pid}&dwvar_{pid}_color={color_code}&Quantity=1&format=ajax'
+                    )
+                    headers = {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        'Accept': 'application/json, text/javascript, */*; q=0.01',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Referer': 'https://www.lululemon.co.kr/',
+                    }
+                    ajax_res = requests.get(ajax_url, headers=headers, verify=certifi.where(), timeout=10)
+                    logger.info(f"getLululemon SFCC AJAX ({site_id}): {ajax_res.status_code}")
+                    if ajax_res.status_code == 200:
+                        ajax_data = ajax_res.json()
+                        for v in ajax_data.get('product', {}).get('variationAttributes', []):
+                            if v.get('attributeId') != 'size':
+                                continue
+                            for val in v.get('values', []):
+                                if val.get('displayValue', '').upper() == targetSize.upper():
+                                    isAvailable = val.get('selectable', False)
+                                    sfcc_success = True
+                                    break
+                        if sfcc_success:
+                            break
+                except Exception as ex:
+                    logger.warning(f"getLululemon SFCC AJAX ({site_id}) error: {ex}")
+
+        # 2순위: 전체 페이지 스크래핑 (curl_cffi)
+        if not sfcc_success:
+            res = None
             try:
-                data = json.loads(s)
-            except Exception:
-                continue
-            if data.get('@type') != 'ProductGroup':
-                continue
-            for v in data.get('hasVariant', []):
-                if v.get('color', '').lower() != targetColor.lower():
+                session = cf_requests.Session(impersonate="chrome120")
+                session.get('https://www.lululemon.co.kr/')
+                res = session.get(productUrl)
+                if res.status_code != 200:
+                    raise Exception(f"status {res.status_code}")
+            except Exception as e:
+                logger.warning(f"getLululemon curl_cffi failed ({e}), fallback to cloudscraper")
+                try:
+                    scraper = cloudscraper.create_scraper()
+                    ca_bundle = certifi.where()
+                    scraper.get('https://www.lululemon.co.kr/', verify=ca_bundle)
+                    res = scraper.get(productUrl, verify=ca_bundle)
+                    if res.status_code != 200:
+                        raise Exception(f"status {res.status_code}")
+                except Exception as e2:
+                    logger.warning(f"getLululemon cloudscraper failed ({e2}), fallback to requests")
+                    session2 = requests.Session()
+                    session2.verify = False
+                    res = session2.get(productUrl)
+
+            if res is None or res.status_code != 200:
+                logger.warning(f"getLululemon HTTP error: {res.status_code if res else 'None'}")
+                return
+
+            scripts = _re.findall(r'<script type="application/ld\+json">(.*?)</script>', res.text, _re.DOTALL)
+            for s in scripts:
+                try:
+                    data = json.loads(s)
+                except Exception:
                     continue
-                if v.get('size', '').upper() == targetSize.upper():
-                    availability = v.get('offers', {}).get('availability', '')
-                    isAvailable = (availability == 'http://schema.org/InStock')
-                    break
+                if data.get('@type') != 'ProductGroup':
+                    continue
+                for v in data.get('hasVariant', []):
+                    if v.get('color', '').lower() != targetColor.lower():
+                        continue
+                    if v.get('size', '').upper() == targetSize.upper():
+                        availability = v.get('offers', {}).get('availability', '')
+                        isAvailable = (availability == 'http://schema.org/InStock')
+                        break
 
         if isAvailable:
             message = f"{productName} {targetSize} 재고있음"
