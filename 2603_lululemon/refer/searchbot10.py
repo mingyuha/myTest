@@ -1,7 +1,17 @@
 import requests
 import urllib3
+import ssl
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import cloudscraper
+from requests.adapters import HTTPAdapter
+
+class NoSSLAdapter(HTTPAdapter):
+    def init_poolmanager(self, *args, **kwargs):
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        kwargs['ssl_context'] = ctx
+        return super().init_poolmanager(*args, **kwargs)
 from bs4 import BeautifulSoup
 import telegram
 import os
@@ -468,7 +478,7 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
         res = None
         try:
             scraper = cloudscraper.create_scraper()
-            scraper.verify = False
+            scraper.mount('https://', NoSSLAdapter())
             scraper.get('https://www.lululemon.co.kr/')
             res = scraper.get(productUrl)
             if res.status_code != 200:
