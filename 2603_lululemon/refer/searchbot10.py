@@ -455,7 +455,7 @@ def getMegaBoxTitle(dateStr, megaTitle, URL_Megabox, data_Title, fileNameMegaBox
     except Exception as ex:
         logger.error("MegaBoxTitle error", ex)
 
-def getLululemon(fileName, productUrl, productName, targetColor, targetSize, logger, now1):
+def getLululemon(fileName, productUrl, productName, targetColor, targetSize, logger, now1, scraperapi_key=''):
     try:
         currentList = []
         newList = []
@@ -468,6 +468,7 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
             open(fileName, "x", encoding='utf8').close()
 
         import re as _re
+        from urllib.parse import quote
 
         # 제품 ID, 색상 코드 추출
         pid_match = _re.search(r'/(prod\d+)\.html', productUrl)
@@ -477,7 +478,51 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
 
         isAvailable = False
 
-        # 1순위: SFCC Product-Variation AJAX API
+        # 1순위: ScraperAPI
+        scraperapi_success = False
+        if scraperapi_key:
+            try:
+                api_url = f'http://api.scraperapi.com/?api_key={scraperapi_key}&url={quote(productUrl, safe="")}&country_code=kr'
+                res = requests.get(api_url, timeout=60)
+                logger.info(f"getLululemon ScraperAPI: {res.status_code}")
+                if res.status_code == 200:
+                    scripts = _re.findall(r'<script type="application/ld\+json">(.*?)</script>', res.text, _re.DOTALL)
+                    for s in scripts:
+                        try:
+                            data = json.loads(s)
+                        except Exception:
+                            continue
+                        if data.get('@type') != 'ProductGroup':
+                            continue
+                        for v in data.get('hasVariant', []):
+                            if v.get('color', '').lower() != targetColor.lower():
+                                continue
+                            if v.get('size', '').upper() == targetSize.upper():
+                                availability = v.get('offers', {}).get('availability', '')
+                                isAvailable = (availability == 'http://schema.org/InStock')
+                                scraperapi_success = True
+                                break
+                        if scraperapi_success:
+                            break
+                    if not scraperapi_success:
+                        scraperapi_success = True  # 200 받았으면 파싱 완료로 처리
+            except Exception as ex:
+                logger.warning(f"getLululemon ScraperAPI error: {ex}")
+
+        if scraperapi_success:
+            if isAvailable:
+                message = f"{productName} {targetSize} 재고있음"
+                newList.append(message)
+            for message in newList:
+                if message not in currentList:
+                    telegram_send(message, logger)
+            with open(fileName, "w", encoding='utf8') as f:
+                for line in newList:
+                    f.write(line + "\n")
+            logger.info("getLululemon end")
+            return
+
+        # 2순위: SFCC Product-Variation AJAX API
         sfcc_success = False
         if pid and color_code:
             for site_id in ['Sites-KR-Site', 'Sites-lululemon-kr-Site']:
@@ -761,7 +806,8 @@ def job():
 
 
     lululemon_url = 'https://www.lululemon.co.kr/ko-kr/p/%ED%8C%A8%EC%8A%A4%ED%8A%B8-%EC%95%A4-%ED%94%84%EB%A6%AC-%ED%95%98%ED%94%84-%ED%83%80%EC%9D%B4%EC%B8%A0-8%22/prod11380319.html?dwvar_prod11380319_color=0001'
-    getLululemon(fileNameLululemon, lululemon_url, '패스트 앤 프리 하프 타이츠 8', 'Black', 'M', logger, now1)
+    scraperapi_key = config['DEFAULT'].get('scraperapi_key', '2a1597b8a84866c87643a72ceafca707')
+    getLululemon(fileNameLululemon, lululemon_url, '패스트 앤 프리 하프 타이츠 8', 'Black', 'M', logger, now1, scraperapi_key)
 
     logger.handlers.clear()
 
