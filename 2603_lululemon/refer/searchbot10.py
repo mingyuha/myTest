@@ -3,6 +3,7 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import certifi
 import cloudscraper
+from curl_cffi import requests as cf_requests
 from bs4 import BeautifulSoup
 import telegram
 import os
@@ -468,24 +469,26 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
 
         res = None
         try:
-            scraper = cloudscraper.create_scraper()
-            ca_bundle = certifi.where()
-            scraper.get('https://www.lululemon.co.kr/', verify=ca_bundle)
-            res = scraper.get(productUrl, verify=ca_bundle)
+            session = cf_requests.Session(impersonate="chrome120")
+            session.get('https://www.lululemon.co.kr/')
+            res = session.get(productUrl)
             if res.status_code != 200:
                 raise Exception(f"status {res.status_code}")
         except Exception as e:
-            logger.warning(f"getLululemon cloudscraper failed ({e}), fallback to requests")
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-            }
-            session = requests.Session()
-            session.headers.update(headers)
-            session.verify = False
-            session.get('https://www.lululemon.co.kr/')
-            res = session.get(productUrl)
+            logger.warning(f"getLululemon curl_cffi failed ({e}), fallback to cloudscraper")
+            try:
+                scraper = cloudscraper.create_scraper()
+                ca_bundle = certifi.where()
+                scraper.get('https://www.lululemon.co.kr/', verify=ca_bundle)
+                res = scraper.get(productUrl, verify=ca_bundle)
+                if res.status_code != 200:
+                    raise Exception(f"status {res.status_code}")
+            except Exception as e2:
+                logger.warning(f"getLululemon cloudscraper failed ({e2}), fallback to requests")
+                session2 = requests.Session()
+                session2.verify = False
+                session2.get('https://www.lululemon.co.kr/')
+                res = session2.get(productUrl)
 
         if res.status_code != 200:
             logger.warning(f"getLululemon HTTP error: {res.status_code}")
