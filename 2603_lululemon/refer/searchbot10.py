@@ -519,7 +519,7 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
             with open(fileName, "w", encoding='utf8') as f:
                 for line in newList:
                     f.write(line + "\n")
-            logger.info("getLululemon end")
+            logger.info(f"getLululemon end - {'재고있음' if isAvailable else '재고없음'}")
             return
 
         # 2순위: SFCC Product-Variation AJAX API
@@ -611,7 +611,7 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
             f.write(line + "\n")
         f.close()
 
-        logger.info("getLululemon end")
+        logger.info(f"getLululemon end - {'재고있음' if isAvailable else '재고없음'}")
     except Exception as ex:
         logger.error(f"getLululemon error: {ex}", exc_info=True)
 
