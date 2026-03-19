@@ -463,23 +463,25 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
         else:
             open(fileName, "x", encoding='utf8').close()
 
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Cache-Control': 'max-age=0',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1',
-        }
-
-        session = requests.Session()
-        session.headers.update(headers)
-        session.get('https://www.lululemon.co.kr/')
-        res = session.get(productUrl)
+        res = None
+        try:
+            scraper = cloudscraper.create_scraper(ssl_context=False)
+            scraper.get('https://www.lululemon.co.kr/')
+            res = scraper.get(productUrl)
+            if res.status_code != 200:
+                raise Exception(f"status {res.status_code}")
+        except Exception as e:
+            logger.warning(f"getLululemon cloudscraper failed ({e}), fallback to requests")
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+            }
+            session = requests.Session()
+            session.headers.update(headers)
+            session.verify = False
+            session.get('https://www.lululemon.co.kr/')
+            res = session.get(productUrl)
 
         if res.status_code != 200:
             logger.warning(f"getLululemon HTTP error: {res.status_code}")
