@@ -467,7 +467,8 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
 
         res = None
         try:
-            scraper = cloudscraper.create_scraper(ssl_context=False)
+            scraper = cloudscraper.create_scraper()
+            scraper.verify = False
             scraper.get('https://www.lululemon.co.kr/')
             res = scraper.get(productUrl)
             if res.status_code != 200:
