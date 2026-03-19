@@ -463,8 +463,16 @@ def getLululemon(fileName, productUrl, productName, targetColor, targetSize, log
         else:
             open(fileName, "x", encoding='utf8').close()
 
-        scraper = cloudscraper.create_scraper()
-        res = scraper.get(productUrl)
+        try:
+            scraper = cloudscraper.create_scraper()
+            res = scraper.get(productUrl)
+        except Exception as e:
+            logger.warning(f"getLululemon cloudscraper failed ({e}), fallback to requests")
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8',
+            }
+            res = requests.get(productUrl, headers=headers)
 
         if res.status_code != 200:
             logger.warning(f"getLululemon HTTP error: {res.status_code}")
